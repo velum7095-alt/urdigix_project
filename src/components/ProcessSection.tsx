@@ -30,7 +30,7 @@ const steps = [
 
 export const ProcessSection = () => {
   return (
-    <section id="process" className="py-24 bg-secondary/30">
+    <section id="process" className="py-24 bg-gradient-to-b from-secondary/50 to-background">
       <div className="container px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

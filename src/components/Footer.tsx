@@ -33,15 +33,15 @@ const socialLinks = [
 
 export const Footer = () => {
   return (
-    <footer className="bg-secondary/30 pt-16 pb-8 border-t border-border">
+    <footer className="bg-foreground text-background pt-16 pb-8">
       <div className="container px-6">
         <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
           {/* Brand */}
           <div className="lg:col-span-2">
-            <a href="#" className="text-2xl font-display font-bold text-foreground inline-block mb-4">
-              <span className="text-gradient">UR</span>DIGIX
+            <a href="#" className="text-2xl font-display font-bold inline-block mb-4">
+              <span className="text-primary">UR</span>DIGIX
             </a>
-            <p className="text-muted-foreground mb-6 max-w-sm">
+            <p className="text-background/70 mb-6 max-w-sm">
               Your full-service digital marketing partner. Transforming businesses through 
               strategic digital solutions.
             </p>
@@ -53,7 +53,7 @@ export const Footer = () => {
                 <Input 
                   type="email" 
                   placeholder="your@email.com" 
-                  className="bg-secondary/50 border-border focus:border-primary max-w-xs"
+                  className="bg-background/10 border-background/20 text-background placeholder:text-background/50 focus:border-primary max-w-xs"
                 />
                 <Button variant="hero">Subscribe</Button>
               </form>
@@ -68,7 +68,7 @@ export const Footer = () => {
                 <li key={link.name}>
                   <a 
                     href={link.href}
-                    className="text-muted-foreground hover:text-primary transition-colors text-sm"
+                    className="text-background/70 hover:text-primary transition-colors text-sm"
                   >
                     {link.name}
                   </a>
@@ -85,7 +85,7 @@ export const Footer = () => {
                 <li key={link.name}>
                   <a 
                     href={link.href}
-                    className="text-muted-foreground hover:text-primary transition-colors text-sm"
+                    className="text-background/70 hover:text-primary transition-colors text-sm"
                   >
                     {link.name}
                   </a>
@@ -102,7 +102,7 @@ export const Footer = () => {
                 <li key={link.name}>
                   <a 
                     href={link.href}
-                    className="text-muted-foreground hover:text-primary transition-colors text-sm"
+                    className="text-background/70 hover:text-primary transition-colors text-sm"
                   >
                     {link.name}
                   </a>
@@ -113,8 +113,8 @@ export const Footer = () => {
         </div>
 
         {/* Bottom */}
-        <div className="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-muted-foreground">
+        <div className="pt-8 border-t border-background/20 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-sm text-background/70">
             © {new Date().getFullYear()} URDIGIX. All rights reserved.
           </p>
           
@@ -128,7 +128,7 @@ export const Footer = () => {
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
-                className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+                className="w-10 h-10 rounded-full bg-background/10 flex items-center justify-center text-background/70 hover:text-primary hover:bg-primary/10 transition-colors"
                 aria-label={social.label}
               >
                 <social.icon className="w-5 h-5" />

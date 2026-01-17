@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import heroBg from "@/assets/hero-bg.jpg";
+import heroBg from "@/assets/hero-bg-light.jpg";
 
 const clientLogos = [
   "TechCorp",
@@ -13,18 +13,18 @@ const clientLogos = [
 
 export const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background">
       {/* Background Image */}
       <div 
-        className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat"
+        className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat opacity-60"
         style={{ backgroundImage: `url(${heroBg})` }}
       />
       
       {/* Overlay Gradient */}
-      <div className="absolute inset-0 w-full h-full bg-gradient-to-b from-background/80 via-background/60 to-background" />
+      <div className="absolute inset-0 w-full h-full bg-gradient-to-b from-background/40 via-transparent to-background" />
       
       {/* Animated Gradient Orb */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-gradient-radial opacity-50 pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-gradient-radial opacity-40 pointer-events-none" />
 
       <div className="container relative z-10 px-6 pt-32 pb-20">
         <div className="max-w-4xl mx-auto text-center">

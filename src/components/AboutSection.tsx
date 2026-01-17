@@ -26,7 +26,7 @@ const highlights = [
 
 export const AboutSection = () => {
   return (
-    <section id="about" className="py-24 bg-secondary/30">
+    <section id="about" className="py-24 bg-gradient-to-b from-background to-secondary/50">
       <div className="container px-6">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Content */}
