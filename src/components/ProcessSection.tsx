@@ -69,7 +69,7 @@ export const ProcessSection = () => {
                   <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
                     <step.icon className="w-7 h-7 text-primary" />
                   </div>
-                  <span className="text-4xl font-display font-bold text-muted-foreground/20">
+                  <span className="text-4xl font-display font-bold text-foreground">
                     {step.number}
                   </span>
                 </div>
