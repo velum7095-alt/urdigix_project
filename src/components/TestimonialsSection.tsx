@@ -17,7 +17,7 @@ const testimonials = [
   {
     name: "Emily Rodriguez",
     role: "Marketing Director, BrandFlow",
-    content: "Their video content went viral on multiple occasions. The reels they created helped us gain 50K+ followers in just two months.",
+    content: "Their video content went viral on multiple occasions. The reels they created helped us gain 10K+ followers in just two months.",
     rating: 5,
   },
 ];
