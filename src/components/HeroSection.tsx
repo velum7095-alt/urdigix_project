@@ -13,11 +13,18 @@ const clientLogos = [
 
 export const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background">
-      {/* Background Image */}
-      <div 
-        className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat opacity-60"
-        style={{ backgroundImage: `url(${heroBg})` }}
+    <section 
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background"
+      aria-label="Hero section"
+    >
+      {/* Background Image with lazy loading and alt text */}
+      <img
+        src={heroBg}
+        alt="Digital marketing abstract background with gradient colors representing innovation and technology"
+        loading="lazy"
+        decoding="async"
+        className="absolute inset-0 w-full h-full object-cover opacity-60"
+        aria-hidden="true"
       />
       
       {/* Overlay Gradient */}
