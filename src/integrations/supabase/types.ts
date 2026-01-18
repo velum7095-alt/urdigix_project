@@ -95,6 +95,39 @@ export type Database = {
         }
         Relationships: []
       }
+      user_role_audit: {
+        Row: {
+          action: string
+          id: string
+          ip_address: string | null
+          old_role: Database["public"]["Enums"]["app_role"] | null
+          performed_at: string
+          performed_by: string | null
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          action: string
+          id?: string
+          ip_address?: string | null
+          old_role?: Database["public"]["Enums"]["app_role"] | null
+          performed_at?: string
+          performed_by?: string | null
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          action?: string
+          id?: string
+          ip_address?: string | null
+          old_role?: Database["public"]["Enums"]["app_role"] | null
+          performed_at?: string
+          performed_by?: string | null
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
