@@ -3,9 +3,10 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, Mail, Phone, MapPin } from "lucide-react";
+import { Send, Mail, Phone, MapPin, MessageCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { trackFormSubmission, trackWhatsAppClick, trackPhoneClick, trackEmailClick } from "@/hooks/useAnalytics";
 
 export const ContactSection = () => {
   const { toast } = useToast();
@@ -33,6 +34,7 @@ export const ContactSection = () => {
         variant: "destructive",
       });
     } else {
+      trackFormSubmission('contact_form');
       toast({
         title: "Message sent!",
         description: "We'll get back to you within 24 hours.",
@@ -152,7 +154,11 @@ export const ContactSection = () => {
               </div>
               <div>
                 <p className="font-semibold mb-1">Email Us</p>
-                <a href="mailto:hello@urdigix.com" className="text-muted-foreground hover:text-primary transition-colors">
+                <a 
+                  href="mailto:hello@urdigix.com" 
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                  onClick={() => trackEmailClick('contact_section')}
+                >
                   hello@urdigix.com
                 </a>
               </div>
@@ -164,7 +170,11 @@ export const ContactSection = () => {
               </div>
               <div>
                 <p className="font-semibold mb-1">Call Us</p>
-                <a href="tel:+1234567890" className="text-muted-foreground hover:text-primary transition-colors">
+                <a 
+                  href="tel:+1234567890" 
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                  onClick={() => trackPhoneClick('contact_section')}
+                >
                   +1 (234) 567-890
                 </a>
               </div>
@@ -182,6 +192,25 @@ export const ContactSection = () => {
                 </p>
               </div>
             </div>
+
+            {/* WhatsApp CTA */}
+            <a
+              href="https://wa.me/1234567890?text=Hi%20URDIGIX!%20I'm%20interested%20in%20your%20digital%20marketing%20services."
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackWhatsAppClick('contact_section')}
+              className="glass-card p-6 flex items-center gap-4 bg-gradient-to-r from-green-500/10 to-green-600/10 border-green-500/20 hover:border-green-500/40 transition-all group"
+            >
+              <div className="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center flex-shrink-0 group-hover:bg-green-500/30 transition-colors">
+                <MessageCircle className="w-6 h-6 text-green-600" />
+              </div>
+              <div>
+                <p className="font-semibold mb-1">Chat on WhatsApp</p>
+                <p className="text-muted-foreground text-sm">
+                  Quick responses • Available 24/7
+                </p>
+              </div>
+            </a>
           </motion.div>
         </div>
       </div>
