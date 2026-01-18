@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Settings } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
 
 const navLinks = [
   { name: "Services", href: "#services" },
@@ -14,6 +16,7 @@ const navLinks = [
 export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isAdmin } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,6 +51,15 @@ export const Navbar = () => {
               {link.name}
             </a>
           ))}
+          {isAdmin && (
+            <Link
+              to="/admin"
+              className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors duration-300 text-sm font-medium"
+            >
+              <Settings size={16} />
+              Admin
+            </Link>
+          )}
           <Button variant="hero" size="lg">
             Get Started
           </Button>
@@ -82,6 +94,16 @@ export const Navbar = () => {
                   {link.name}
                 </a>
               ))}
+              {isAdmin && (
+                <Link
+                  to="/admin"
+                  className="flex items-center gap-2 text-foreground hover:text-primary transition-colors py-2"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <Settings size={18} />
+                  Admin Panel
+                </Link>
+              )}
               <Button variant="hero" size="lg" className="mt-4">
                 Get Started
               </Button>
