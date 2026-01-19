@@ -17,29 +17,70 @@ export const ContactSection = () => {
     setIsSubmitting(true);
     
     const formData = new FormData(e.currentTarget);
-    const name = formData.get('name') as string;
-    const email = formData.get('email') as string;
-    const message = formData.get('message') as string;
+    const name = (formData.get('name') as string)?.trim();
+    const email = (formData.get('email') as string)?.trim();
+    const message = (formData.get('message') as string)?.trim();
 
-    const { error } = await supabase.from('contact_submissions').insert({
-      name,
-      email,
-      message,
-    });
+    // Client-side validation (server validates too)
+    if (!name || name.length < 2) {
+      toast({
+        title: "Validation Error",
+        description: "Name must be at least 2 characters.",
+        variant: "destructive",
+      });
+      setIsSubmitting(false);
+      return;
+    }
 
-    if (error) {
+    if (!message || message.length < 10) {
+      toast({
+        title: "Validation Error",
+        description: "Message must be at least 10 characters.",
+        variant: "destructive",
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase.functions.invoke('contact-form', {
+        body: { name, email, message },
+      });
+
+      if (error) {
+        throw new Error(error.message || 'Failed to send message');
+      }
+
+      if (data?.error) {
+        // Handle rate limiting
+        if (data.retryAfter) {
+          toast({
+            title: "Too Many Requests",
+            description: "Please wait before submitting again.",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Error",
+            description: data.details?.join(', ') || data.error,
+            variant: "destructive",
+          });
+        }
+      } else {
+        trackFormSubmission('contact_form');
+        toast({
+          title: "Message sent!",
+          description: "We'll get back to you within 24 hours.",
+        });
+        (e.target as HTMLFormElement).reset();
+      }
+    } catch (error) {
+      console.error('Contact form error:', error);
       toast({
         title: "Error",
         description: "Failed to send message. Please try again.",
         variant: "destructive",
       });
-    } else {
-      trackFormSubmission('contact_form');
-      toast({
-        title: "Message sent!",
-        description: "We'll get back to you within 24 hours.",
-      });
-      (e.target as HTMLFormElement).reset();
     }
     
     setIsSubmitting(false);
