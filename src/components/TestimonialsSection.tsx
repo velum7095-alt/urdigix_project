@@ -11,7 +11,7 @@ const testimonials = [{
   content: "The Meta Ads campaigns they designed brought us a 5x ROAS. Their strategic approach and attention to detail is unmatched in the industry.",
   rating: 5
 }, {
-  name: "Emily Rodriguez",
+  name: "Chandra Sekhar",
   role: "Marketing Director, BrandFlow",
   content: "Their video content went viral on multiple occasions. The reels they created helped us gain 10K+ followers in just two months.",
   rating: 5
