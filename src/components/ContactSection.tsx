@@ -196,8 +196,10 @@ export const ContactSection = () => {
               </div>
               <div>
                 <p className="font-semibold mb-1">Visit Us</p>
-                <p className="text-muted-foreground">Urdigix Digital Marketing Agency  
-Remote Office – Serving Clients Worldwide<br />
+                <p className="text-muted-foreground">Urdigix Digital Marketing Agency   
+Remote Office – Serving Clients Worldwide
+
+                <br />
                   Tech City, TC 12345
                 </p>
               </div>
