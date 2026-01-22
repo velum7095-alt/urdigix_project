@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Star, Quote } from "lucide-react";
 const testimonials = [{
-  name: "Sarah Mitchell",
+  name: "Divakar Reddy",
   role: "CEO, TechStart Inc.",
   content: "URDIGIX transformed our online presence completely. Our website traffic increased by 340% and lead generation skyrocketed within 3 months.",
   rating: 5
