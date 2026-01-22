@@ -200,7 +200,7 @@ export const ContactSection = () => {
 Remote Office – Serving Clients Worldwide
 
                 <br />
-                  Tech City, TC 12345
+                  ​
                 </p>
               </div>
             </div>
