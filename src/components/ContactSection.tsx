@@ -1,4 +1,4 @@
-import { forwardRef, useState } from "react";
+import { memo, useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,8 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { trackFormSubmission, trackWhatsAppClick, trackPhoneClick, trackEmailClick } from "@/hooks/useAnalytics";
 
-// PERFORMANCE: forwardRef to prevent React warnings with lazy loading
-export const ContactSection = forwardRef<HTMLElement>((_, ref) => {
+const ContactSectionComponent = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -87,7 +86,7 @@ export const ContactSection = forwardRef<HTMLElement>((_, ref) => {
   };
 
   return (
-    <section ref={ref} id="contact" className="py-24 relative overflow-hidden">
+    <section id="contact" className="py-24 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-radial opacity-30" />
       
       <div className="container relative z-10 px-6">
@@ -251,6 +250,8 @@ export const ContactSection = forwardRef<HTMLElement>((_, ref) => {
       </div>
     </section>
   );
-});
+};
 
-ContactSection.displayName = "ContactSection";
+ContactSectionComponent.displayName = "ContactSection";
+
+export const ContactSection = memo(ContactSectionComponent);

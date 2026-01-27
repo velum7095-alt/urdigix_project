@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import { memo } from "react";
 import { motion } from "framer-motion";
 import { Star, Quote } from "lucide-react";
 
@@ -19,10 +19,9 @@ const testimonials = [{
   rating: 5
 }];
 
-// PERFORMANCE: forwardRef to prevent React warnings with lazy loading
-export const TestimonialsSection = forwardRef<HTMLElement>((_, ref) => {
+const TestimonialsSectionComponent = () => {
   return (
-    <section ref={ref} id="testimonials" className="py-24 relative overflow-hidden">
+    <section id="testimonials" className="py-24 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-radial opacity-20" />
       
       <div className="container relative z-10 px-6">
@@ -107,6 +106,8 @@ export const TestimonialsSection = forwardRef<HTMLElement>((_, ref) => {
       </div>
     </section>
   );
-});
+};
 
-TestimonialsSection.displayName = "TestimonialsSection";
+TestimonialsSectionComponent.displayName = "TestimonialsSection";
+
+export const TestimonialsSection = memo(TestimonialsSectionComponent);

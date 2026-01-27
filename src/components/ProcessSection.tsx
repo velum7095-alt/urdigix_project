@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import { memo } from "react";
 import { motion } from "framer-motion";
 import { Search, Lightbulb, Rocket, BarChart3 } from "lucide-react";
 
@@ -29,10 +29,9 @@ const steps = [
   },
 ];
 
-// PERFORMANCE: forwardRef to prevent React warnings with lazy loading
-export const ProcessSection = forwardRef<HTMLElement>((_, ref) => {
+const ProcessSectionComponent = () => {
   return (
-    <section ref={ref} id="process" className="py-24 bg-gradient-to-b from-secondary/50 to-background">
+    <section id="process" className="py-24 bg-gradient-to-b from-secondary/50 to-background">
       <div className="container px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -86,6 +85,8 @@ export const ProcessSection = forwardRef<HTMLElement>((_, ref) => {
       </div>
     </section>
   );
-});
+};
 
-ProcessSection.displayName = "ProcessSection";
+ProcessSectionComponent.displayName = "ProcessSection";
+
+export const ProcessSection = memo(ProcessSectionComponent);
