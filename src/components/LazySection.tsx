@@ -1,4 +1,4 @@
-import { Suspense, lazy, ComponentType, memo } from "react";
+import { Suspense, lazy, memo } from "react";
 
 /**
  * PERFORMANCE: Lazy loading wrapper for below-the-fold sections
@@ -6,7 +6,7 @@ import { Suspense, lazy, ComponentType, memo } from "react";
  */
 
 // Loading skeleton for sections while they load
-const SectionSkeleton = memo(() => (
+export const SectionSkeleton = memo(() => (
   <div className="py-24 px-6">
     <div className="container mx-auto">
       <div className="animate-pulse">
@@ -24,20 +24,7 @@ const SectionSkeleton = memo(() => (
 
 SectionSkeleton.displayName = "SectionSkeleton";
 
-interface LazySectionProps {
-  component: ComponentType;
-}
-
-export const LazySection = memo(({ component: Component }: LazySectionProps) => (
-  <Suspense fallback={<SectionSkeleton />}>
-    <Component />
-  </Suspense>
-));
-
-LazySection.displayName = "LazySection";
-
 // PERFORMANCE: Lazy-loaded section exports
-// These components will only be loaded when they enter the viewport
 export const LazyServicesSection = lazy(() => 
   import("@/components/ServicesSection").then(m => ({ default: m.ServicesSection }))
 );
