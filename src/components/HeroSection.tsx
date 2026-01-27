@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import heroBg from "@/assets/hero-bg-light.jpg";
+import heroBg from "@/assets/hero-bg-light.webp";
 
 const clientLogos = [
   "TechCorp",
