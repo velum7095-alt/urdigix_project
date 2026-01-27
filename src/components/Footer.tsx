@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { forwardRef } from "react";
 import { Instagram, Linkedin, Twitter, Facebook, Youtube } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,9 +31,10 @@ const socialLinks = [
   { icon: Youtube, href: "https://youtube.com", label: "YouTube" },
 ];
 
-export const Footer = () => {
+// PERFORMANCE: forwardRef to prevent React warnings with lazy loading
+export const Footer = forwardRef<HTMLElement>((_, ref) => {
   return (
-    <footer className="bg-foreground text-background pt-16 pb-8">
+    <footer ref={ref} className="bg-foreground text-background pt-16 pb-8">
       <div className="container px-6">
         <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
           {/* Brand */}
@@ -118,25 +119,25 @@ export const Footer = () => {
             © {new Date().getFullYear()} URDIGIX. All rights reserved.
           </p>
           
-          {/* Social Links */}
+          {/* Social Links - CSS hover instead of framer-motion scale */}
           <div className="flex items-center gap-4">
             {socialLinks.map((social) => (
-              <motion.a
+              <a
                 key={social.label}
                 href={social.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                className="w-10 h-10 rounded-full bg-background/10 flex items-center justify-center text-background/70 hover:text-primary hover:bg-primary/10 transition-colors"
+                className="w-10 h-10 rounded-full bg-background/10 flex items-center justify-center text-background/70 hover:text-primary hover:bg-primary/10 hover:brightness-110 active:brightness-95 transition-all duration-200"
                 aria-label={social.label}
               >
                 <social.icon className="w-5 h-5" />
-              </motion.a>
+              </a>
             ))}
           </div>
         </div>
       </div>
     </footer>
   );
-};
+});
+
+Footer.displayName = "Footer";

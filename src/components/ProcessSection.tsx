@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { motion } from "framer-motion";
 import { Search, Lightbulb, Rocket, BarChart3 } from "lucide-react";
 
@@ -28,9 +29,10 @@ const steps = [
   },
 ];
 
-export const ProcessSection = () => {
+// PERFORMANCE: forwardRef to prevent React warnings with lazy loading
+export const ProcessSection = forwardRef<HTMLElement>((_, ref) => {
   return (
-    <section id="process" className="py-24 bg-gradient-to-b from-secondary/50 to-background">
+    <section ref={ref} id="process" className="py-24 bg-gradient-to-b from-secondary/50 to-background">
       <div className="container px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -84,4 +86,6 @@ export const ProcessSection = () => {
       </div>
     </section>
   );
-};
+});
+
+ProcessSection.displayName = "ProcessSection";

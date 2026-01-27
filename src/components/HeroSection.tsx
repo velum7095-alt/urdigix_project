@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, forwardRef } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -14,10 +14,17 @@ const clientLogos = [
   "BrandFlow",
 ];
 
-// PERFORMANCE: Memoize to prevent unnecessary re-renders
-const HeroSectionComponent = () => {
+/**
+ * PERFORMANCE: Hero Section Component - Critical for LCP
+ * - Uses forwardRef to prevent React warnings with lazy loading
+ * - Hero image uses eager loading with high fetch priority
+ * - Explicit width/height prevent CLS
+ * - WebP format for optimal compression
+ */
+const HeroSectionComponent = forwardRef<HTMLElement>((_, ref) => {
   return (
     <section 
+      ref={ref}
       className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background"
       aria-label="Hero section"
     >
@@ -26,6 +33,9 @@ const HeroSectionComponent = () => {
         - loading="eager" ensures immediate loading (above-the-fold)
         - fetchPriority="high" prioritizes this as critical resource
         - decoding="async" prevents blocking main thread
+        - Explicit width/height prevent layout shift
+        - opacity-70 instead of 60 for better clarity
+        - will-change: transform disabled to prevent blur
       */}
       <img
         src={heroBg}
@@ -33,12 +43,19 @@ const HeroSectionComponent = () => {
         loading="eager"
         decoding="async"
         fetchPriority="high"
-        className="absolute inset-0 w-full h-full object-cover opacity-60"
+        width={1920}
+        height={1080}
+        className="absolute inset-0 w-full h-full object-cover opacity-70"
+        style={{ 
+          willChange: 'auto',
+          imageRendering: 'auto',
+          transform: 'translateZ(0)' // GPU layer without scaling
+        }}
         aria-hidden="true"
       />
       
       {/* Overlay Gradient - CSS only, no performance impact */}
-      <div className="absolute inset-0 w-full h-full bg-gradient-to-b from-background/40 via-transparent to-background" />
+      <div className="absolute inset-0 w-full h-full bg-gradient-to-b from-background/30 via-transparent to-background" />
       
       {/* Animated Gradient Orb - CSS only */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-gradient-radial opacity-40 pointer-events-none" />
@@ -136,7 +153,9 @@ const HeroSectionComponent = () => {
       </div>
     </section>
   );
-};
+});
+
+HeroSectionComponent.displayName = "HeroSection";
 
 // PERFORMANCE: Export memoized component to prevent unnecessary re-renders
 export const HeroSection = memo(HeroSectionComponent);

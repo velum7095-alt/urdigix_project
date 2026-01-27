@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { motion } from "framer-motion";
 import { 
   Globe, 
@@ -72,9 +73,10 @@ const itemVariants = {
   },
 };
 
-export const ServicesSection = () => {
+// PERFORMANCE: forwardRef to prevent React warnings with lazy loading
+export const ServicesSection = forwardRef<HTMLElement>((_, ref) => {
   return (
-    <section id="services" className="py-24 relative overflow-hidden">
+    <section ref={ref} id="services" className="py-24 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-radial opacity-30" />
       
       <div className="container relative z-10 px-6">
@@ -108,7 +110,7 @@ export const ServicesSection = () => {
               variants={itemVariants}
               className="group glass-card p-6 hover:border-primary/30 transition-all duration-300 cursor-pointer"
             >
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300">
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-all duration-300">
                 <service.icon className="w-6 h-6 text-primary" />
               </div>
               <h3 className="text-lg font-display font-semibold mb-2 group-hover:text-primary transition-colors">
@@ -123,4 +125,6 @@ export const ServicesSection = () => {
       </div>
     </section>
   );
-};
+});
+
+ServicesSection.displayName = "ServicesSection";
