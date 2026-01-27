@@ -17,12 +17,13 @@ export const HeroSection = () => {
       className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background"
       aria-label="Hero section"
     >
-      {/* Background Image with lazy loading and alt text */}
+      {/* Background Image - eager loading for LCP optimization */}
       <img
         src={heroBg}
         alt="Digital marketing abstract background with gradient colors representing innovation and technology"
-        loading="lazy"
+        loading="eager"
         decoding="async"
+        fetchPriority="high"
         className="absolute inset-0 w-full h-full object-cover opacity-60"
         aria-hidden="true"
       />
