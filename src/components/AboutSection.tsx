@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import { memo } from "react";
 import { motion } from "framer-motion";
 import { Award, Users, Zap, Shield } from "lucide-react";
 
@@ -20,10 +20,9 @@ const highlights = [{
   description: "Clear metrics and honest communication at every step."
 }];
 
-// PERFORMANCE: forwardRef to prevent React warnings with lazy loading
-export const AboutSection = forwardRef<HTMLElement>((_, ref) => {
+const AboutSectionComponent = () => {
   return (
-    <section ref={ref} id="about" className="py-24 bg-gradient-to-b from-background to-secondary/50">
+    <section id="about" className="py-24 bg-gradient-to-b from-background to-secondary/50">
       <div className="container px-6">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Content */}
@@ -108,6 +107,8 @@ export const AboutSection = forwardRef<HTMLElement>((_, ref) => {
       </div>
     </section>
   );
-});
+};
 
-AboutSection.displayName = "AboutSection";
+AboutSectionComponent.displayName = "AboutSection";
+
+export const AboutSection = memo(AboutSectionComponent);

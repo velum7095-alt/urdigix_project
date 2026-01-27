@@ -1,4 +1,4 @@
-import { memo, forwardRef } from "react";
+import { memo } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -16,15 +16,14 @@ const clientLogos = [
 
 /**
  * PERFORMANCE: Hero Section Component - Critical for LCP
- * - Uses forwardRef to prevent React warnings with lazy loading
+ * - Memoized to prevent unnecessary re-renders
  * - Hero image uses eager loading with high fetch priority
  * - Explicit width/height prevent CLS
  * - WebP format for optimal compression
  */
-const HeroSectionComponent = forwardRef<HTMLElement>((_, ref) => {
+const HeroSectionComponent = () => {
   return (
     <section 
-      ref={ref}
       className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background"
       aria-label="Hero section"
     >
@@ -35,7 +34,6 @@ const HeroSectionComponent = forwardRef<HTMLElement>((_, ref) => {
         - decoding="async" prevents blocking main thread
         - Explicit width/height prevent layout shift
         - opacity-70 instead of 60 for better clarity
-        - will-change: transform disabled to prevent blur
       */}
       <img
         src={heroBg}
@@ -49,7 +47,7 @@ const HeroSectionComponent = forwardRef<HTMLElement>((_, ref) => {
         style={{ 
           willChange: 'auto',
           imageRendering: 'auto',
-          transform: 'translateZ(0)' // GPU layer without scaling
+          transform: 'translateZ(0)'
         }}
         aria-hidden="true"
       />
@@ -153,7 +151,7 @@ const HeroSectionComponent = forwardRef<HTMLElement>((_, ref) => {
       </div>
     </section>
   );
-});
+};
 
 HeroSectionComponent.displayName = "HeroSection";
 

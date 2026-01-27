@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import { memo } from "react";
 import { Instagram, Linkedin, Twitter, Facebook, Youtube } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,10 +31,9 @@ const socialLinks = [
   { icon: Youtube, href: "https://youtube.com", label: "YouTube" },
 ];
 
-// PERFORMANCE: forwardRef to prevent React warnings with lazy loading
-export const Footer = forwardRef<HTMLElement>((_, ref) => {
+const FooterComponent = () => {
   return (
-    <footer ref={ref} className="bg-foreground text-background pt-16 pb-8">
+    <footer className="bg-foreground text-background pt-16 pb-8">
       <div className="container px-6">
         <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
           {/* Brand */}
@@ -138,6 +137,8 @@ export const Footer = forwardRef<HTMLElement>((_, ref) => {
       </div>
     </footer>
   );
-});
+};
 
-Footer.displayName = "Footer";
+FooterComponent.displayName = "Footer";
+
+export const Footer = memo(FooterComponent);

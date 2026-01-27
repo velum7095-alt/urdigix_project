@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import { memo } from "react";
 import { motion } from "framer-motion";
 import { 
   Globe, 
@@ -73,10 +73,9 @@ const itemVariants = {
   },
 };
 
-// PERFORMANCE: forwardRef to prevent React warnings with lazy loading
-export const ServicesSection = forwardRef<HTMLElement>((_, ref) => {
+const ServicesSectionComponent = () => {
   return (
-    <section ref={ref} id="services" className="py-24 relative overflow-hidden">
+    <section id="services" className="py-24 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-radial opacity-30" />
       
       <div className="container relative z-10 px-6">
@@ -125,6 +124,8 @@ export const ServicesSection = forwardRef<HTMLElement>((_, ref) => {
       </div>
     </section>
   );
-});
+};
 
-ServicesSection.displayName = "ServicesSection";
+ServicesSectionComponent.displayName = "ServicesSection";
+
+export const ServicesSection = memo(ServicesSectionComponent);
