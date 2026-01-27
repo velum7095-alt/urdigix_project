@@ -2,7 +2,7 @@ import { Suspense, memo } from "react";
 import { Navbar } from "@/components/Navbar";
 import { HeroSection } from "@/components/HeroSection";
 import {
-  LazySection,
+  SectionSkeleton,
   LazyServicesSection,
   LazyProcessSection,
   LazyTestimonialsSection,
@@ -16,7 +16,6 @@ import {
  * 1. HeroSection and Navbar load immediately (above-the-fold, critical for FCP/LCP)
  * 2. All other sections are lazy-loaded (code-splitting)
  * 3. Suspense boundaries prevent blocking during chunk loads
- * 4. Memoized to prevent unnecessary re-renders
  */
 
 const Index = memo(() => {
@@ -27,13 +26,23 @@ const Index = memo(() => {
       <HeroSection />
       
       {/* Below-the-fold sections - lazy loaded for faster initial paint */}
+      <Suspense fallback={<SectionSkeleton />}>
+        <LazyServicesSection />
+      </Suspense>
+      <Suspense fallback={<SectionSkeleton />}>
+        <LazyProcessSection />
+      </Suspense>
+      <Suspense fallback={<SectionSkeleton />}>
+        <LazyTestimonialsSection />
+      </Suspense>
+      <Suspense fallback={<SectionSkeleton />}>
+        <LazyAboutSection />
+      </Suspense>
+      <Suspense fallback={<SectionSkeleton />}>
+        <LazyContactSection />
+      </Suspense>
       <Suspense fallback={null}>
-        <LazySection component={LazyServicesSection} />
-        <LazySection component={LazyProcessSection} />
-        <LazySection component={LazyTestimonialsSection} />
-        <LazySection component={LazyAboutSection} />
-        <LazySection component={LazyContactSection} />
-        <LazySection component={LazyFooter} />
+        <LazyFooter />
       </Suspense>
     </main>
   );
