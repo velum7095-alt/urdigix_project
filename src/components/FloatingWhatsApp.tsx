@@ -1,3 +1,4 @@
+import { memo, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { MessageCircle } from "lucide-react";
 import { trackWhatsAppClick } from "@/hooks/useAnalytics";
@@ -5,7 +6,22 @@ import { trackWhatsAppClick } from "@/hooks/useAnalytics";
 const WHATSAPP_NUMBER = "1234567890";
 const WHATSAPP_MESSAGE = "Hi URDIGIX! I'm interested in your digital marketing services.";
 
-export const FloatingWhatsApp = () => {
+/**
+ * PERFORMANCE: Delayed rendering for non-critical floating element
+ * This component is not part of initial viewport, so we delay its load
+ * to prioritize FCP/LCP critical content
+ */
+const FloatingWhatsAppComponent = () => {
+  const [shouldRender, setShouldRender] = useState(false);
+  
+  useEffect(() => {
+    // PERFORMANCE: Delay rendering until after initial paint
+    const timer = setTimeout(() => setShouldRender(true), 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!shouldRender) return null;
+
   const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
 
   return (
@@ -17,7 +33,7 @@ export const FloatingWhatsApp = () => {
       className="fixed bottom-6 right-6 z-50 flex items-center gap-3 group"
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
-      transition={{ delay: 1, type: "spring", stiffness: 200 }}
+      transition={{ type: "spring", stiffness: 200 }}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       aria-label="Chat on WhatsApp"
@@ -40,3 +56,5 @@ export const FloatingWhatsApp = () => {
     </motion.a>
   );
 };
+
+export const FloatingWhatsApp = memo(FloatingWhatsAppComponent);
