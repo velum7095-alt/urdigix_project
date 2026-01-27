@@ -1,5 +1,7 @@
+import { forwardRef } from "react";
 import { motion } from "framer-motion";
 import { Award, Users, Zap, Shield } from "lucide-react";
+
 const highlights = [{
   icon: Award,
   title: "Award-Winning Work",
@@ -17,22 +19,20 @@ const highlights = [{
   title: "Transparent Reporting",
   description: "Clear metrics and honest communication at every step."
 }];
-export const AboutSection = () => {
-  return <section id="about" className="py-24 bg-gradient-to-b from-background to-secondary/50">
+
+// PERFORMANCE: forwardRef to prevent React warnings with lazy loading
+export const AboutSection = forwardRef<HTMLElement>((_, ref) => {
+  return (
+    <section ref={ref} id="about" className="py-24 bg-gradient-to-b from-background to-secondary/50">
       <div className="container px-6">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Content */}
-          <motion.div initial={{
-          opacity: 0,
-          x: -40
-        }} whileInView={{
-          opacity: 1,
-          x: 0
-        }} viewport={{
-          once: true
-        }} transition={{
-          duration: 0.6
-        }}>
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
             <span className="text-primary text-sm font-semibold uppercase tracking-wider">About URDIGIX</span>
             <h2 className="text-3xl md:text-5xl font-display font-bold mt-4 mb-6">
               Your Partner in
@@ -50,18 +50,15 @@ export const AboutSection = () => {
             </p>
 
             <div className="grid grid-cols-2 gap-4">
-              {highlights.map((item, index) => <motion.div key={item.title} initial={{
-              opacity: 0,
-              y: 20
-            }} whileInView={{
-              opacity: 1,
-              y: 0
-            }} viewport={{
-              once: true
-            }} transition={{
-              duration: 0.4,
-              delay: index * 0.1
-            }} className="flex items-start gap-3">
+              {highlights.map((item, index) => (
+                <motion.div
+                  key={item.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                  className="flex items-start gap-3"
+                >
                   <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
                     <item.icon className="w-5 h-5 text-primary" />
                   </div>
@@ -69,22 +66,19 @@ export const AboutSection = () => {
                     <p className="font-semibold text-sm">{item.title}</p>
                     <p className="text-xs text-muted-foreground mt-1">{item.description}</p>
                   </div>
-                </motion.div>)}
+                </motion.div>
+              ))}
             </div>
           </motion.div>
 
           {/* Visual */}
-          <motion.div initial={{
-          opacity: 0,
-          x: 40
-        }} whileInView={{
-          opacity: 1,
-          x: 0
-        }} viewport={{
-          once: true
-        }} transition={{
-          duration: 0.6
-        }} className="relative">
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="relative"
+          >
             <div className="glass-card p-8 md:p-12">
               <div className="grid grid-cols-2 gap-6">
                 <div className="glass-card p-6 text-center">
@@ -112,5 +106,8 @@ export const AboutSection = () => {
           </motion.div>
         </div>
       </div>
-    </section>;
-};
+    </section>
+  );
+});
+
+AboutSection.displayName = "AboutSection";

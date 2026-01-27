@@ -9,7 +9,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
     
-    <!-- Critical: Inline font-face declarations for fastest FCP -->
+    <!-- 
+      PERFORMANCE: Critical font inlining for fastest FCP
+      - font-display: swap ensures text visible during load
+      - Inlined @font-face prevents render-blocking
+    -->
     <style>
       /* Critical CSS - Inlined for fastest FCP */
       @font-face {
