@@ -1,4 +1,9 @@
-/* Fonts loaded via index.html with preconnect for better performance */
+/**
+ * PERFORMANCE: Critical CSS Optimizations
+ * - Fonts declared inline in index.html for fastest FCP
+ * - font-display: swap ensures text is visible during font load
+ * - Reduced animation durations for better perceived performance
+ */
 
 @tailwind base;
 @tailwind components;

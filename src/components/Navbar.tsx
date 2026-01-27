@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Settings } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -13,24 +13,46 @@ const navLinks = [
   { name: "Contact", href: "#contact" },
 ];
 
-export const Navbar = () => {
+/**
+ * PERFORMANCE: Optimized Navbar
+ * - Memoized to prevent unnecessary re-renders
+ * - useCallback for event handlers
+ * - Minimal animation complexity
+ */
+const NavbarComponent = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isAdmin } = useAuth();
 
   useEffect(() => {
+    // PERFORMANCE: Throttled scroll handler
+    let ticking = false;
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setIsScrolled(window.scrollY > 50);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const toggleMobileMenu = useCallback(() => {
+    setIsMobileMenuOpen(prev => !prev);
+  }, []);
+
+  const closeMobileMenu = useCallback(() => {
+    setIsMobileMenuOpen(false);
   }, []);
 
   return (
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled ? "bg-white/90 backdrop-blur-lg shadow-sm py-3" : "py-6"
       }`}
@@ -68,7 +90,8 @@ export const Navbar = () => {
         {/* Mobile Menu Button */}
         <button
           className="md:hidden text-foreground"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          onClick={toggleMobileMenu}
+          aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
         >
           {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -81,6 +104,7 @@ export const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
             className="md:hidden glass-card mt-4 mx-4 rounded-xl overflow-hidden"
           >
             <div className="p-6 flex flex-col gap-4">
@@ -89,7 +113,7 @@ export const Navbar = () => {
                   key={link.name}
                   href={link.href}
                   className="text-foreground hover:text-primary transition-colors py-2"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={closeMobileMenu}
                 >
                   {link.name}
                 </a>
@@ -98,7 +122,7 @@ export const Navbar = () => {
                 <Link
                   to="/admin"
                   className="flex items-center gap-2 text-foreground hover:text-primary transition-colors py-2"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={closeMobileMenu}
                 >
                   <Settings size={18} />
                   Admin Panel
@@ -114,3 +138,5 @@ export const Navbar = () => {
     </motion.nav>
   );
 };
+
+export const Navbar = memo(NavbarComponent);
