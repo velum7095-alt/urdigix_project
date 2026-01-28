@@ -67,8 +67,7 @@ const TestimonialsSectionComponent = () => {
                   {testimonial.name.charAt(0)}
                 </div>
                 <div>
-                  <p className="font-semibold text-foreground">{testimonial.name}</p>
-                  <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                  <p className="font-semibold text-foreground">{testimonial.role}</p>
                 </div>
               </div>
             </motion.div>
