@@ -1,7 +1,7 @@
 import { useState, useEffect, memo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Settings } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -23,6 +23,7 @@ const NavbarComponent = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isAdmin } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // PERFORMANCE: Throttled scroll handler
@@ -82,7 +83,7 @@ const NavbarComponent = () => {
               Admin
             </Link>
           )}
-          <Button variant="hero" size="lg">
+          <Button variant="hero" size="lg" onClick={() => navigate('/start-project')}>
             Get Started
           </Button>
         </div>
@@ -128,7 +129,7 @@ const NavbarComponent = () => {
                   Admin Panel
                 </Link>
               )}
-              <Button variant="hero" size="lg" className="mt-4">
+              <Button variant="hero" size="lg" className="mt-4" onClick={() => { closeMobileMenu(); navigate('/start-project'); }}>
                 Get Started
               </Button>
             </div>
