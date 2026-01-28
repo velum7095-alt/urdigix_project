@@ -1,5 +1,6 @@
 import { memo } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { 
   Globe, 
   Video, 
@@ -74,6 +75,14 @@ const itemVariants = {
 };
 
 const ServicesSectionComponent = () => {
+  const navigate = useNavigate();
+
+  const handleServiceClick = (serviceTitle: string) => {
+    if (serviceTitle === "Website Development") {
+      navigate("/start-project?service=website");
+    }
+  };
+
   return (
     <section id="services" className="py-24 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-radial opacity-30" />
@@ -107,7 +116,10 @@ const ServicesSectionComponent = () => {
             <motion.div
               key={service.title}
               variants={itemVariants}
-              className="group glass-card p-6 hover:border-primary/30 transition-all duration-300 cursor-pointer"
+              onClick={() => handleServiceClick(service.title)}
+              className={`group glass-card p-6 hover:border-primary/30 transition-all duration-300 ${
+                service.title === "Website Development" ? "cursor-pointer" : "cursor-default"
+              }`}
             >
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-all duration-300">
                 <service.icon className="w-6 h-6 text-primary" />

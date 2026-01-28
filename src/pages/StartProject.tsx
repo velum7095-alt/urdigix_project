@@ -1,11 +1,11 @@
-import { useState, memo } from "react";
+import { useState, memo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, ArrowLeft, Rocket, Mail, CheckCircle, Calendar, Globe, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -32,6 +32,17 @@ const budgets = [
   { id: "notsure", label: "Not sure" },
 ];
 
+const websiteGoals = [
+  { id: "leads", label: "Leads" },
+  { id: "sales", label: "Sales" },
+  { id: "branding", label: "Branding" },
+];
+
+const timelines = [
+  { id: "asap", label: "ASAP" },
+  { id: "flexible", label: "Flexible" },
+];
+
 interface FormData {
   services: string[];
   goal: string;
@@ -40,13 +51,17 @@ interface FormData {
   email: string;
   phone: string;
   business: string;
+  timeline: string;
 }
 
 const StartProjectPage = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { toast } = useToast();
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const isWebsiteService = searchParams.get("service") === "website";
+  const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     services: [],
     goal: "",
@@ -55,7 +70,14 @@ const StartProjectPage = () => {
     email: "",
     phone: "",
     business: "",
+    timeline: "",
   });
+
+  useEffect(() => {
+    if (isWebsiteService) {
+      setFormData((prev) => ({ ...prev, services: ["website"] }));
+    }
+  }, [isWebsiteService]);
 
   const handleServiceToggle = (serviceId: string) => {
     setFormData((prev) => ({
@@ -87,19 +109,29 @@ const StartProjectPage = () => {
       return;
     }
     if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      toast({ title: "Please enter a valid email", variant: "destructive" });
+      toast({ title: "Please enter a valid email or phone", variant: "destructive" });
       return;
     }
 
     setIsSubmitting(true);
 
     try {
-      const message = `
+      let message: string;
+      
+      if (isWebsiteService) {
+        message = `
+Service: Website Development
+Goal: ${websiteGoals.find(g => g.id === formData.goal)?.label || "Not specified"}
+Timeline: ${timelines.find(t => t.id === formData.timeline)?.label || "Not specified"}
+        `.trim();
+      } else {
+        message = `
 Services: ${formData.services.map(s => services.find(svc => svc.id === s)?.label).join(", ")}
 Goal: ${goals.find(g => g.id === formData.goal)?.label || "Not specified"}
 Budget: ${budgets.find(b => b.id === formData.budget)?.label || "Not specified"}
 Business: ${formData.business || "Not specified"}
-      `.trim();
+        `.trim();
+      }
 
       const { error } = await supabase.functions.invoke('contact-form', {
         body: {
@@ -111,7 +143,11 @@ Business: ${formData.business || "Not specified"}
 
       if (error) throw error;
 
-      setStep(3);
+      if (isWebsiteService) {
+        setSubmitted(true);
+      } else {
+        setStep(3);
+      }
     } catch (error) {
       console.error('Submission error:', error);
       toast({
@@ -130,6 +166,197 @@ Business: ${formData.business || "Not specified"}
     exit: { opacity: 0, x: -20 },
   };
 
+  // Simplified Website Form
+  if (isWebsiteService) {
+    return (
+      <main className="min-h-screen bg-background flex flex-col">
+        {/* Simple Header */}
+        <div className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
+          <div className="container max-w-2xl mx-auto px-6 py-4">
+            <button 
+              onClick={() => navigate("/")}
+              className="text-sm text-muted-foreground hover:text-primary transition-colors"
+            >
+              ← Back to home
+            </button>
+          </div>
+        </div>
+
+        <div className="flex-1 flex items-center justify-center px-6 pt-20 pb-12">
+          <div className="w-full max-w-md">
+            <AnimatePresence mode="wait">
+              {!submitted ? (
+                <motion.div
+                  key="form"
+                  variants={slideVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{ duration: 0.3 }}
+                  className="space-y-6"
+                >
+                  <div className="text-center mb-6">
+                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 mb-4">
+                      <Globe className="w-7 h-7 text-primary" />
+                    </div>
+                    <h1 className="text-2xl md:text-3xl font-display font-bold mb-2">
+                      Start Website Project
+                    </h1>
+                    <p className="text-muted-foreground text-sm">
+                      Tell us what you need. We'll contact you shortly.
+                    </p>
+                  </div>
+
+                  {/* Hidden service field */}
+                  <input type="hidden" name="service" value="website-development" />
+
+                  {/* Goal */}
+                  <div className="space-y-3">
+                    <Label className="text-sm font-semibold">Your goal</Label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {websiteGoals.map((goal) => (
+                        <label
+                          key={goal.id}
+                          className={`flex items-center justify-center p-3 rounded-xl border cursor-pointer transition-all text-center ${
+                            formData.goal === goal.id
+                              ? "border-primary bg-primary/5"
+                              : "border-border hover:border-primary/50"
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name="goal"
+                            value={goal.id}
+                            checked={formData.goal === goal.id}
+                            onChange={() => setFormData((prev) => ({ ...prev, goal: goal.id }))}
+                            className="sr-only"
+                          />
+                          <span className="text-sm font-medium">{goal.label}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Timeline */}
+                  <div className="space-y-3">
+                    <Label className="text-sm font-semibold">Timeline</Label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {timelines.map((timeline) => (
+                        <label
+                          key={timeline.id}
+                          className={`flex items-center justify-center p-3 rounded-xl border cursor-pointer transition-all text-center ${
+                            formData.timeline === timeline.id
+                              ? "border-primary bg-primary/5"
+                              : "border-border hover:border-primary/50"
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name="timeline"
+                            value={timeline.id}
+                            checked={formData.timeline === timeline.id}
+                            onChange={() => setFormData((prev) => ({ ...prev, timeline: timeline.id }))}
+                            className="sr-only"
+                          />
+                          <span className="text-sm font-medium">{timeline.label}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Name */}
+                  <div>
+                    <Label htmlFor="name" className="text-sm font-semibold mb-2 block">
+                      Name
+                    </Label>
+                    <Input
+                      id="name"
+                      placeholder="Your name"
+                      value={formData.name}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
+                      className="h-11"
+                    />
+                  </div>
+
+                  {/* Email / Phone */}
+                  <div>
+                    <Label htmlFor="email" className="text-sm font-semibold mb-2 block">
+                      Email / Phone
+                    </Label>
+                    <Input
+                      id="email"
+                      placeholder="your@email.com or phone number"
+                      value={formData.email}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
+                      className="h-11"
+                    />
+                  </div>
+
+                  <Button
+                    onClick={handleSubmit}
+                    variant="hero"
+                    size="lg"
+                    className="w-full group"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "Submitting..." : "🚀 Submit"}
+                  </Button>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="thanks"
+                  variants={slideVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{ duration: 0.3 }}
+                  className="text-center space-y-6"
+                >
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                    className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4"
+                  >
+                    <CheckCircle className="w-8 h-8 text-primary" />
+                  </motion.div>
+                  <div>
+                    <h1 className="text-2xl md:text-3xl font-display font-bold mb-3">
+                      Thanks! Your request has been sent.
+                    </h1>
+                    <p className="text-muted-foreground">
+                      We'll contact you within 24 hours.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      onClick={() => navigate("/")}
+                    >
+                      <Home className="w-4 h-4 mr-2" />
+                      Back to Home
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="lg"
+                      onClick={() => navigate("/#services")}
+                    >
+                      <Globe className="w-4 h-4 mr-2" />
+                      View Our Work
+                    </Button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  // Original 3-step wizard for general flow
   return (
     <main className="min-h-screen bg-background flex flex-col">
       {/* Progress Bar */}
