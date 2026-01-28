@@ -13,7 +13,7 @@ import {
   Home
 } from 'lucide-react';
 import { AdminDashboard } from '@/components/admin/AdminDashboard';
-import { AdminContent } from '@/components/admin/AdminContent';
+import { AdminCMS } from '@/components/admin/AdminCMS';
 import { AdminMessages } from '@/components/admin/AdminMessages';
 import { AdminAnalytics } from '@/components/admin/AdminAnalytics';
 
@@ -101,9 +101,9 @@ const Admin = () => {
               <LayoutDashboard className="w-4 h-4" />
               <span className="hidden sm:inline">Dashboard</span>
             </TabsTrigger>
-            <TabsTrigger value="content" className="flex items-center gap-2">
+            <TabsTrigger value="cms" className="flex items-center gap-2">
               <FileText className="w-4 h-4" />
-              <span className="hidden sm:inline">Content</span>
+              <span className="hidden sm:inline">CMS</span>
             </TabsTrigger>
             <TabsTrigger value="messages" className="flex items-center gap-2">
               <MessageSquare className="w-4 h-4" />
@@ -118,8 +118,8 @@ const Admin = () => {
           <TabsContent value="dashboard">
             <AdminDashboard />
           </TabsContent>
-          <TabsContent value="content">
-            <AdminContent />
+          <TabsContent value="cms">
+            <AdminCMS />
           </TabsContent>
           <TabsContent value="messages">
             <AdminMessages />

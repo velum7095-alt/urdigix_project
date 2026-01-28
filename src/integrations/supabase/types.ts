@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      blog_posts: {
+        Row: {
+          content: string | null
+          created_at: string
+          created_by: string | null
+          excerpt: string | null
+          featured_image: string | null
+          id: string
+          published_at: string | null
+          slug: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          created_by?: string | null
+          excerpt?: string | null
+          featured_image?: string | null
+          id?: string
+          published_at?: string | null
+          slug: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          created_by?: string | null
+          excerpt?: string | null
+          featured_image?: string | null
+          id?: string
+          published_at?: string | null
+          slug?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       contact_submissions: {
         Row: {
           created_at: string
@@ -71,6 +113,96 @@ export type Database = {
         }
         Relationships: []
       }
+      portfolio_projects: {
+        Row: {
+          client_name: string | null
+          content: string | null
+          created_at: string
+          description: string | null
+          display_order: number | null
+          featured_image: string | null
+          gallery_images: Json | null
+          id: string
+          project_url: string | null
+          slug: string
+          status: string
+          technologies: string[] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          client_name?: string | null
+          content?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          featured_image?: string | null
+          gallery_images?: Json | null
+          id?: string
+          project_url?: string | null
+          slug: string
+          status?: string
+          technologies?: string[] | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          client_name?: string | null
+          content?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          featured_image?: string | null
+          gallery_images?: Json | null
+          id?: string
+          project_url?: string | null
+          slug?: string
+          status?: string
+          technologies?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      services: {
+        Row: {
+          created_at: string
+          description: string | null
+          display_order: number | null
+          features: Json | null
+          icon: string | null
+          id: string
+          is_active: boolean
+          price_from: number | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          features?: Json | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          price_from?: number | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          features?: Json | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          price_from?: number | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       site_content: {
         Row: {
           content: Json
@@ -92,6 +224,51 @@ export type Database = {
           section_key?: string
           updated_at?: string
           updated_by?: string | null
+        }
+        Relationships: []
+      }
+      team_members: {
+        Row: {
+          bio: string | null
+          created_at: string
+          display_order: number | null
+          email: string | null
+          id: string
+          is_active: boolean
+          linkedin_url: string | null
+          name: string
+          photo_url: string | null
+          role: string
+          twitter_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string
+          display_order?: number | null
+          email?: string | null
+          id?: string
+          is_active?: boolean
+          linkedin_url?: string | null
+          name: string
+          photo_url?: string | null
+          role: string
+          twitter_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string
+          display_order?: number | null
+          email?: string | null
+          id?: string
+          is_active?: boolean
+          linkedin_url?: string | null
+          name?: string
+          photo_url?: string | null
+          role?: string
+          twitter_url?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
