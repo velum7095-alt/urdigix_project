@@ -27,7 +27,7 @@ const socialLinks = [
   { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
   { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
   { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
-  { icon: Facebook, href: "https://facebook.com", label: "Facebook" },
+  { icon: Facebook, href: "https://www.facebook.com/profile.php?id=61587007410997", label: "Facebook" },
   { icon: Youtube, href: "https://youtube.com", label: "YouTube" },
 ];
 
