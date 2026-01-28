@@ -26,9 +26,9 @@ const goals = [
 ];
 
 const budgets = [
-  { id: "under4k", label: "Under ₹4,000" },
-  { id: "4k-6k", label: "₹4,000 – ₹6,000" },
-  { id: "6k+", label: "₹6,500+" },
+  { id: "under500", label: "Under $500" },
+  { id: "500-1k", label: "$500 – $1,000" },
+  { id: "1k+", label: "$1,000+" },
   { id: "notsure", label: "Not sure" },
 ];
 
