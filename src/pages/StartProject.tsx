@@ -38,6 +38,17 @@ const websiteGoals = [
   { id: "branding", label: "Branding" },
 ];
 
+const serviceDetails: Record<string, { label: string; icon: string }> = {
+  website: { label: "Website Development", icon: "🌐" },
+  social: { label: "Social Media Management", icon: "📱" },
+  video: { label: "Video Editing & Reels", icon: "🎬" },
+  content: { label: "Content & Scripting", icon: "📝" },
+  ads: { label: "Meta & Google Ads", icon: "🎯" },
+  email: { label: "Email Marketing", icon: "📧" },
+  whatsapp: { label: "WhatsApp Marketing", icon: "💬" },
+  brand: { label: "Brand Identity", icon: "🎨" },
+};
+
 const timelines = [
   { id: "asap", label: "ASAP" },
   { id: "flexible", label: "Flexible" },
@@ -60,7 +71,8 @@ const StartProjectPage = () => {
   const { toast } = useToast();
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const isWebsiteService = searchParams.get("service") === "website";
+  const serviceParam = searchParams.get("service");
+  const isDirectService = serviceParam && serviceDetails[serviceParam];
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     services: [],
@@ -74,10 +86,10 @@ const StartProjectPage = () => {
   });
 
   useEffect(() => {
-    if (isWebsiteService) {
-      setFormData((prev) => ({ ...prev, services: ["website"] }));
+    if (serviceParam && serviceDetails[serviceParam]) {
+      setFormData((prev) => ({ ...prev, services: [serviceParam] }));
     }
-  }, [isWebsiteService]);
+  }, [serviceParam]);
 
   const handleServiceToggle = (serviceId: string) => {
     setFormData((prev) => ({
@@ -117,10 +129,11 @@ const StartProjectPage = () => {
 
     try {
       let message: string;
+      const currentService = serviceParam ? serviceDetails[serviceParam] : null;
       
-      if (isWebsiteService) {
+      if (isDirectService && currentService) {
         message = `
-Service: Website Development
+Service: ${currentService.label}
 Goal: ${websiteGoals.find(g => g.id === formData.goal)?.label || "Not specified"}
 Timeline: ${timelines.find(t => t.id === formData.timeline)?.label || "Not specified"}
         `.trim();
@@ -143,7 +156,7 @@ Business: ${formData.business || "Not specified"}
 
       if (error) throw error;
 
-      if (isWebsiteService) {
+      if (isDirectService) {
         setSubmitted(true);
       } else {
         setStep(3);
@@ -166,8 +179,10 @@ Business: ${formData.business || "Not specified"}
     exit: { opacity: 0, x: -20 },
   };
 
-  // Simplified Website Form
-  if (isWebsiteService) {
+  const currentServiceInfo = serviceParam ? serviceDetails[serviceParam] : null;
+
+  // Simplified single-page form for direct service links
+  if (isDirectService && currentServiceInfo) {
     return (
       <main className="min-h-screen bg-background flex flex-col">
         {/* Simple Header */}
@@ -196,11 +211,9 @@ Business: ${formData.business || "Not specified"}
                   className="space-y-6"
                 >
                   <div className="text-center mb-6">
-                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 mb-4">
-                      <Globe className="w-7 h-7 text-primary" />
-                    </div>
+                    <div className="text-4xl mb-4">{currentServiceInfo.icon}</div>
                     <h1 className="text-2xl md:text-3xl font-display font-bold mb-2">
-                      Start Website Project
+                      Start {currentServiceInfo.label} Project
                     </h1>
                     <p className="text-muted-foreground text-sm">
                       Tell us what you need. We'll contact you shortly.
@@ -208,7 +221,7 @@ Business: ${formData.business || "Not specified"}
                   </div>
 
                   {/* Hidden service field */}
-                  <input type="hidden" name="service" value="website-development" />
+                  <input type="hidden" name="service" value={serviceParam} />
 
                   {/* Goal */}
                   <div className="space-y-3">
