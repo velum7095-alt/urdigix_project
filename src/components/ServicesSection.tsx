@@ -78,8 +78,19 @@ const ServicesSectionComponent = () => {
   const navigate = useNavigate();
 
   const handleServiceClick = (serviceTitle: string) => {
-    if (serviceTitle === "Website Development") {
-      navigate("/start-project?service=website");
+    const serviceMap: Record<string, string> = {
+      "Website Development": "website",
+      "Social Media Management": "social",
+      "Video Editing & Reels": "video",
+      "Content & Scripting": "content",
+      "Meta & Google Ads": "ads",
+      "Email Marketing": "email",
+      "WhatsApp Marketing": "whatsapp",
+      "Brand Identity": "brand",
+    };
+    const serviceId = serviceMap[serviceTitle];
+    if (serviceId) {
+      navigate(`/start-project?service=${serviceId}`);
     }
   };
 
@@ -117,9 +128,7 @@ const ServicesSectionComponent = () => {
               key={service.title}
               variants={itemVariants}
               onClick={() => handleServiceClick(service.title)}
-              className={`group glass-card p-6 hover:border-primary/30 transition-all duration-300 ${
-                service.title === "Website Development" ? "cursor-pointer" : "cursor-default"
-              }`}
+              className="group glass-card p-6 hover:border-primary/30 transition-all duration-300 cursor-pointer"
             >
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-all duration-300">
                 <service.icon className="w-6 h-6 text-primary" />
