@@ -1,6 +1,6 @@
 import { useState, memo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, ArrowLeft, Rocket, Mail, CheckCircle, Calendar, Globe, Home } from "lucide-react";
+import { ArrowRight, ArrowLeft, Rocket, Mail, CheckCircle, Calendar, Globe, Home, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -8,6 +8,36 @@ import { Label } from "@/components/ui/label";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+const countryCodes = [
+  { code: "+1", country: "US", flag: "🇺🇸" },
+  { code: "+44", country: "UK", flag: "🇬🇧" },
+  { code: "+91", country: "IN", flag: "🇮🇳" },
+  { code: "+61", country: "AU", flag: "🇦🇺" },
+  { code: "+49", country: "DE", flag: "🇩🇪" },
+  { code: "+33", country: "FR", flag: "🇫🇷" },
+  { code: "+971", country: "UAE", flag: "🇦🇪" },
+  { code: "+65", country: "SG", flag: "🇸🇬" },
+  { code: "+81", country: "JP", flag: "🇯🇵" },
+  { code: "+86", country: "CN", flag: "🇨🇳" },
+  { code: "+55", country: "BR", flag: "🇧🇷" },
+  { code: "+27", country: "ZA", flag: "🇿🇦" },
+  { code: "+234", country: "NG", flag: "🇳🇬" },
+  { code: "+254", country: "KE", flag: "🇰🇪" },
+  { code: "+60", country: "MY", flag: "🇲🇾" },
+  { code: "+63", country: "PH", flag: "🇵🇭" },
+  { code: "+966", country: "SA", flag: "🇸🇦" },
+  { code: "+974", country: "QA", flag: "🇶🇦" },
+  { code: "+52", country: "MX", flag: "🇲🇽" },
+  { code: "+39", country: "IT", flag: "🇮🇹" },
+];
 
 const services = [
   { id: "website", label: "Website" },
@@ -60,6 +90,7 @@ interface FormData {
   budget: string;
   name: string;
   email: string;
+  countryCode: string;
   phone: string;
   business: string;
   timeline: string;
@@ -80,6 +111,7 @@ const StartProjectPage = () => {
     budget: "",
     name: "",
     email: "",
+    countryCode: "+1",
     phone: "",
     business: "",
     timeline: "",
@@ -138,10 +170,12 @@ Goal: ${websiteGoals.find(g => g.id === formData.goal)?.label || "Not specified"
 Timeline: ${timelines.find(t => t.id === formData.timeline)?.label || "Not specified"}
         `.trim();
       } else {
+        const fullPhone = formData.phone ? `${formData.countryCode} ${formData.phone}` : "Not specified";
         message = `
 Services: ${formData.services.map(s => services.find(svc => svc.id === s)?.label).join(", ")}
 Goal: ${goals.find(g => g.id === formData.goal)?.label || "Not specified"}
 Budget: ${budgets.find(b => b.id === formData.budget)?.label || "Not specified"}
+Phone: ${fullPhone}
 Business: ${formData.business || "Not specified"}
         `.trim();
       }
@@ -561,14 +595,37 @@ Business: ${formData.business || "Not specified"}
                     <Label htmlFor="phone" className="text-sm font-medium mb-2 block">
                       Phone / WhatsApp (optional)
                     </Label>
-                    <Input
-                      id="phone"
-                      type="tel"
-                      placeholder="+91 9876543210"
-                      value={formData.phone}
-                      onChange={(e) => setFormData((prev) => ({ ...prev, phone: e.target.value }))}
-                      className="h-12"
-                    />
+                    <div className="flex gap-2">
+                      <Select
+                        value={formData.countryCode}
+                        onValueChange={(value) => setFormData((prev) => ({ ...prev, countryCode: value }))}
+                      >
+                        <SelectTrigger className="w-[120px] h-12">
+                          <SelectValue>
+                            {countryCodes.find(c => c.code === formData.countryCode)?.flag} {formData.countryCode}
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent className="max-h-[300px]">
+                          {countryCodes.map((country) => (
+                            <SelectItem key={country.code} value={country.code}>
+                              <span className="flex items-center gap-2">
+                                <span>{country.flag}</span>
+                                <span>{country.code}</span>
+                                <span className="text-muted-foreground text-xs">({country.country})</span>
+                              </span>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Input
+                        id="phone"
+                        type="tel"
+                        placeholder="9876543210"
+                        value={formData.phone}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, phone: e.target.value }))}
+                        className="h-12 flex-1"
+                      />
+                    </div>
                   </div>
 
                   <div>
