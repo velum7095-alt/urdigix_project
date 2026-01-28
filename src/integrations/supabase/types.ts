@@ -86,6 +86,21 @@ export type Database = {
         }
         Relationships: []
       }
+      notes: {
+        Row: {
+          id: number
+          title: string
+        }
+        Insert: {
+          id?: never
+          title: string
+        }
+        Update: {
+          id?: never
+          title?: string
+        }
+        Relationships: []
+      }
       page_views: {
         Row: {
           created_at: string
