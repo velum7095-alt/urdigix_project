@@ -691,15 +691,6 @@ Business: ${formData.business || "Not specified"}
 
                 <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
                   <Button
-                    variant="hero"
-                    size="lg"
-                    onClick={() => window.open("https://calendly.com", "_blank")}
-                    className="group"
-                  >
-                    <Calendar className="w-4 h-4 mr-2" />
-                    Book a free strategy call
-                  </Button>
-                  <Button
                     variant="outline"
                     size="lg"
                     onClick={() => navigate("/#services")}
