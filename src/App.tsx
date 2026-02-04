@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { Analytics } from "@vercel/analytics/react";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
@@ -37,6 +38,7 @@ const App = () => (
             </Routes>
             <FloatingWhatsApp />
           </BrowserRouter>
+          <Analytics />
         </TooltipProvider>
       </AuthProvider>
     </QueryClientProvider>
@@ -44,3 +46,4 @@ const App = () => (
 );
 
 export default App;
+
