@@ -63,4 +63,6 @@ export default defineConfig(({ mode }) => ({
   optimizeDeps: {
     include: ["react", "react-dom", "react-router-dom", "framer-motion"],
   },
+  // COMPATIBILITY: Allow NEXT_PUBLIC_ variables (standard for Supabase/Vercel)
+  envPrefix: ['VITE_', 'NEXT_PUBLIC_'],
 }));
