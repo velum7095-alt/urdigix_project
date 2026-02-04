@@ -2,11 +2,21 @@ import { useState, useEffect, createContext, useContext, ReactNode } from 'react
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 
+// ============================================
+// DEV MODE CREDENTIALS (TEMPORARY)
+// ============================================
+// Username: admin
+// Password: admin123
+// ============================================
+// Production Mode
+const DEV_MODE = false;
+
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   isAdmin: boolean;
   isLoading: boolean;
+  isDevMode: boolean;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signUp: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
@@ -19,6 +29,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDevMode, setIsDevMode] = useState(false);
 
   useEffect(() => {
     // Set up auth state listener FIRST
@@ -26,7 +37,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
-        
+
         // Check admin role with setTimeout to avoid deadlock
         if (session?.user) {
           setTimeout(() => {
@@ -43,7 +54,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-      
+
       if (session?.user) {
         checkAdminRole(session.user.id);
       } else {
@@ -60,7 +71,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         _user_id: userId,
         _role: 'admin'
       });
-      
+
       if (error) {
         console.error('Error checking admin role:', error);
         setIsAdmin(false);
@@ -93,6 +104,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signOut = async () => {
+    // Clear dev session
+    localStorage.removeItem('dev_admin_session');
+    setIsDevMode(false);
+
     await supabase.auth.signOut();
     setUser(null);
     setSession(null);
@@ -100,7 +115,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, isAdmin, isLoading, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={{ user, session, isAdmin, isLoading, isDevMode, signIn, signUp, signOut }}>
       {children}
     </AuthContext.Provider>
   );
