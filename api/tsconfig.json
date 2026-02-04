@@ -11,13 +11,10 @@
         "skipLibCheck": true,
         "isolatedModules": true,
         "declaration": false,
-        "noEmit": false,
-        "outDir": "./dist",
-        "rootDir": ".",
+        "noEmit": true,
         "resolveJsonModule": true,
         "allowSyntheticDefaultImports": true,
-        "forceConsistentCasingInFileNames": true,
-        "verbatimModuleSyntax": true
+        "forceConsistentCasingInFileNames": true
     },
     "include": [
         "./**/*.ts"
