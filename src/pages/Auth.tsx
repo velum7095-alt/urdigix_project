@@ -14,13 +14,12 @@ const authSchema = z.object({
 });
 
 const Auth = () => {
-  const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
 
-  const { signIn, signUp, user, isLoading } = useAuth();
+  const { signIn, user, isLoading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -49,16 +48,12 @@ const Auth = () => {
     setIsSubmitting(true);
 
     try {
-      const { error } = isLogin
-        ? await signIn(email, password)
-        : await signUp(email, password);
+      const { error } = await signIn(email, password);
 
       if (error) {
         let errorMessage = error.message;
         if (error.message.includes('Invalid login credentials')) {
           errorMessage = 'Invalid email or password. Please try again.';
-        } else if (error.message.includes('User already registered')) {
-          errorMessage = 'This email is already registered. Please sign in instead.';
         }
         toast({
           title: "Error",
@@ -66,18 +61,10 @@ const Auth = () => {
           variant: "destructive",
         });
       } else {
-        if (!isLogin) {
-          toast({
-            title: "Account created!",
-            description: "You can now sign in with your credentials.",
-          });
-          setIsLogin(true);
-        } else {
-          toast({
-            title: "Welcome!",
-            description: "Successfully logged in.",
-          });
-        }
+        toast({
+          title: "Welcome!",
+          description: "Successfully logged in.",
+        });
       }
     } catch (err) {
       toast({
@@ -88,12 +75,6 @@ const Auth = () => {
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  // Quick fill dev credentials
-  const fillDevCredentials = () => {
-    setEmail('admin');
-    setPassword('admin123');
   };
 
   if (isLoading) {
@@ -126,53 +107,26 @@ const Auth = () => {
               <Shield className="w-8 h-8 text-white" />
             </div>
             <h1 className="text-2xl font-bold mb-2">
-              {isLogin ? 'Admin Login' : 'Create Account'}
+              Admin Login
             </h1>
             <p className="text-gray-500 text-sm">
-              {isLogin
-                ? 'Sign in to access the admin panel'
-                : 'Create an account to get started'}
+              Sign in to access the admin panel
             </p>
           </div>
-
-          {/* Dev Mode Credentials Box */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-4 mb-6"
-          >
-            <p className="text-green-800 text-sm font-medium mb-2 flex items-center gap-2">
-              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-              Dev Mode Active
-            </p>
-            <div className="text-sm text-green-700 space-y-1">
-              <p><strong>Username:</strong> admin</p>
-              <p><strong>Password:</strong> admin123</p>
-            </div>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="mt-3 w-full border-green-300 text-green-700 hover:bg-green-100"
-              onClick={fillDevCredentials}
-            >
-              Auto-fill Credentials
-            </Button>
-          </motion.div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label htmlFor="email" className="text-sm font-medium mb-2 block">
-                Username / Email
+                Email
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <Input
                   id="email"
-                  type="text"
+                  type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin"
+                  placeholder="admin@urdigix.com"
                   className="pl-10 bg-gray-50 border-gray-200 focus:border-orange-400 focus:ring-orange-400"
                   required
                 />
@@ -208,31 +162,16 @@ const Auth = () => {
               className="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-semibold py-6 rounded-xl shadow-lg shadow-orange-200 hover:shadow-orange-300 transition-all"
               disabled={isSubmitting}
             >
-              {isSubmitting
-                ? 'Please wait...'
-                : isLogin ? 'Sign In' : 'Create Account'}
+              {isSubmitting ? 'Verifying...' : 'Sign In'}
             </Button>
           </form>
 
-          <div className="mt-6 text-center">
-            <button
-              type="button"
-              onClick={() => setIsLogin(!isLogin)}
-              className="text-sm text-gray-500 hover:text-orange-600 transition-colors"
-            >
-              {isLogin
-                ? "Don't have an account? Sign up"
-                : 'Already have an account? Sign in'}
-            </button>
-          </div>
+          <p className="text-center text-xs text-gray-400 mt-6">
+            Protected admin area • URDIGIX
+          </p>
         </div>
-
-        <p className="text-center text-xs text-gray-400 mt-6">
-          Protected admin area • URDIGIX
-        </p>
       </motion.div>
     </div>
   );
 };
-
 export default Auth;
