@@ -1,3 +1,13 @@
+/**
+ * Admin Authentication Page
+ * ==========================
+ * Secure login page with:
+ * - Rate limiting protection
+ * - Input validation with Zod
+ * - Progressive lockout on failed attempts
+ * - No sensitive data logging
+ */
+
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -5,12 +15,19 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
-import { Lock, Mail, ArrowLeft, Shield } from 'lucide-react';
+import { useRateLimiter } from '@/hooks/useRateLimiter';
+import { Lock, Mail, ArrowLeft, Shield, AlertTriangle } from 'lucide-react';
 import { z } from 'zod';
 
+// Strict validation schema
 const authSchema = z.object({
-  email: z.string().min(1, { message: "Username/email is required" }).max(255),
-  password: z.string().min(1, { message: "Password is required" }).max(100),
+  email: z.string()
+    .min(1, { message: "Email is required" })
+    .email({ message: "Invalid email format" })
+    .max(255, { message: "Email too long" }),
+  password: z.string()
+    .min(1, { message: "Password is required" })
+    .max(100, { message: "Password too long" }),
 });
 
 const Auth = () => {
@@ -22,6 +39,25 @@ const Auth = () => {
   const { signIn, user, isLoading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  
+  // Rate limiting for login attempts
+  const { 
+    isLocked, 
+    remainingLockoutMs, 
+    recordAttempt,
+    attempts 
+  } = useRateLimiter({
+    maxAttempts: 5,
+    storageKey: 'admin_login_rate_limit',
+  });
+
+  // Format remaining lockout time
+  const formatLockoutTime = (ms: number): string => {
+    const seconds = Math.ceil(ms / 1000);
+    if (seconds < 60) return `${seconds} seconds`;
+    const minutes = Math.ceil(seconds / 60);
+    return `${minutes} minute${minutes > 1 ? 's' : ''}`;
+  };
 
   useEffect(() => {
     if (user && !isLoading) {
@@ -32,6 +68,16 @@ const Auth = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
+
+    // Check rate limiting first
+    if (isLocked) {
+      toast({
+        title: "Too many attempts",
+        description: `Please wait ${formatLockoutTime(remainingLockoutMs)} before trying again.`,
+        variant: "destructive",
+      });
+      return;
+    }
 
     // Validate input
     const result = authSchema.safeParse({ email, password });
@@ -51,22 +97,28 @@ const Auth = () => {
       const { error } = await signIn(email, password);
 
       if (error) {
-        let errorMessage = error.message;
-        if (error.message.includes('Invalid login credentials')) {
-          errorMessage = 'Invalid email or password. Please try again.';
-        }
+        // Record failed attempt (don't log sensitive details)
+        recordAttempt(false);
+        
+        // Generic error message to prevent enumeration
         toast({
-          title: "Error",
-          description: errorMessage,
+          title: "Authentication Failed",
+          description: "Invalid email or password. Please try again.",
           variant: "destructive",
         });
       } else {
+        // Record successful attempt (resets counter)
+        recordAttempt(true);
+        
         toast({
           title: "Welcome!",
           description: "Successfully logged in.",
         });
       }
-    } catch (err) {
+    } catch {
+      // Record failed attempt
+      recordAttempt(false);
+      
       toast({
         title: "Error",
         description: "An unexpected error occurred. Please try again.",
@@ -114,6 +166,38 @@ const Auth = () => {
             </p>
           </div>
 
+          {/* Rate Limit Warning */}
+          {isLocked && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3"
+            >
+              <AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-medium text-red-700">
+                  Too many failed attempts
+                </p>
+                <p className="text-sm text-red-600">
+                  Please wait {formatLockoutTime(remainingLockoutMs)} before trying again.
+                </p>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Attempt Warning */}
+          {!isLocked && attempts > 2 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="mb-6 p-3 bg-amber-50 border border-amber-200 rounded-xl"
+            >
+              <p className="text-sm text-amber-700 text-center">
+                {5 - attempts} attempt{5 - attempts !== 1 ? 's' : ''} remaining before temporary lockout
+              </p>
+            </motion.div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label htmlFor="email" className="text-sm font-medium mb-2 block">
@@ -129,6 +213,8 @@ const Auth = () => {
                   placeholder="admin@urdigix.com"
                   className="pl-10 bg-gray-50 border-gray-200 focus:border-orange-400 focus:ring-orange-400"
                   required
+                  disabled={isLocked}
+                  autoComplete="email"
                 />
               </div>
               {errors.email && (
@@ -150,6 +236,8 @@ const Auth = () => {
                   placeholder="••••••••"
                   className="pl-10 bg-gray-50 border-gray-200 focus:border-orange-400 focus:ring-orange-400"
                   required
+                  disabled={isLocked}
+                  autoComplete="current-password"
                 />
               </div>
               {errors.password && (
@@ -160,9 +248,9 @@ const Auth = () => {
             <Button
               type="submit"
               className="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-semibold py-6 rounded-xl shadow-lg shadow-orange-200 hover:shadow-orange-300 transition-all"
-              disabled={isSubmitting}
+              disabled={isSubmitting || isLocked}
             >
-              {isSubmitting ? 'Verifying...' : 'Sign In'}
+              {isSubmitting ? 'Verifying...' : isLocked ? 'Locked' : 'Sign In'}
             </Button>
           </form>
 
@@ -174,4 +262,5 @@ const Auth = () => {
     </div>
   );
 };
+
 export default Auth;
