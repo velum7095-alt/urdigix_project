@@ -29,6 +29,10 @@ export const LazyServicesSection = lazy(() =>
   import("@/components/ServicesSection").then(m => ({ default: m.ServicesSection }))
 );
 
+export const LazyPosterDesignSection = lazy(() =>
+  import("@/components/PosterDesignSection").then(m => ({ default: m.PosterDesignSection }))
+);
+
 export const LazyProcessSection = lazy(() => 
   import("@/components/ProcessSection").then(m => ({ default: m.ProcessSection }))
 );
