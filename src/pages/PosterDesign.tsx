@@ -1,5 +1,4 @@
-import { memo } from "react";
-import { Helmet } from "react-helmet-async";
+import { memo, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import {
