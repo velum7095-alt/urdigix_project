@@ -4,6 +4,7 @@ import { HeroSection } from "@/components/HeroSection";
 import {
   SectionSkeleton,
   LazyServicesSection,
+  LazyPosterDesignSection,
   LazyProcessSection,
   LazyTestimonialsSection,
   LazyAboutSection,
@@ -28,6 +29,9 @@ const Index = memo(() => {
       {/* Below-the-fold sections - lazy loaded for faster initial paint */}
       <Suspense fallback={<SectionSkeleton />}>
         <LazyServicesSection />
+      </Suspense>
+      <Suspense fallback={<SectionSkeleton />}>
+        <LazyPosterDesignSection />
       </Suspense>
       <Suspense fallback={<SectionSkeleton />}>
         <LazyProcessSection />
