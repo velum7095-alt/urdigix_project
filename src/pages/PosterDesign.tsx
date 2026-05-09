@@ -148,14 +148,6 @@ const PosterDesignComponent = () => {
   }, []);
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Premium Poster Design Services | URDIGIX</title>
-        <meta
-          name="description"
-          content="Eye-catching social media poster design packages by URDIGIX. Monthly plans, single posters, fast delivery, and unlimited impact for growing brands."
-        />
-        <link rel="canonical" href="https://digital-grow-wizard.lovable.app/poster-design" />
-      </Helmet>
 
       <Navbar />
 
