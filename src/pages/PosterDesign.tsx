@@ -132,6 +132,20 @@ const PosterDesignComponent = () => {
   const navigate = useNavigate();
   const goLead = () => navigate("/start-project?service=brand");
 
+  useEffect(() => {
+    const prevTitle = document.title;
+    document.title = "Premium Poster Design Services | URDIGIX";
+    const meta = document.querySelector('meta[name="description"]');
+    const prevDesc = meta?.getAttribute("content") ?? "";
+    meta?.setAttribute(
+      "content",
+      "Eye-catching social media poster design packages by URDIGIX. Monthly plans, single posters, fast delivery, and unlimited impact for growing brands.",
+    );
+    return () => {
+      document.title = prevTitle;
+      meta?.setAttribute("content", prevDesc);
+    };
+  }, []);
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
