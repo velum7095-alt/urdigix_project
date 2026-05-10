@@ -2,12 +2,6 @@ import { useState, useEffect, createContext, useContext, ReactNode } from 'react
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 
-// ============================================
-// DEV MODE CREDENTIALS (TEMPORARY)
-// ============================================
-// Username: admin
-// Password: admin123
-// ============================================
 // Production Mode
 const DEV_MODE = false;
 
