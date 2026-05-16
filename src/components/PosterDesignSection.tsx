@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Sparkles, Zap, Infinity as InfinityIcon, Award, Users, Image as ImageIcon, Calendar, FileText, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import posterShowcase from "@/assets/poster-showcase.png";
+import posterShowcase from "@/assets/poster.png";
 
 const features = [
   { icon: ImageIcon, title: "Social Media Posters", desc: "Scroll-stopping creatives" },

@@ -2,7 +2,7 @@ import { memo, useEffect, useState } from "react";
 import { MessageCircle } from "lucide-react";
 import { trackWhatsAppClick } from "@/hooks/useAnalytics";
 
-const WHATSAPP_NUMBER = "1234567890";
+const WHATSAPP_NUMBER = "918142908550";
 const WHATSAPP_MESSAGE = "Hi URDIGIX! I'm interested in your digital marketing services.";
 
 /**

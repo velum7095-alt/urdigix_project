@@ -11,6 +11,8 @@ interface Testimonial {
   projectLink?: string;
   projectType?: string;
   isVerified?: boolean;
+  avatarInitials?: string;
+  isActive?: boolean;
 }
 
 const testimonials: Testimonial[] = [
@@ -18,9 +20,9 @@ const testimonials: Testimonial[] = [
     name: "Navya",
     role: "Founder",
     company: "Navya Studio (Beauty Parlour & Hairstyle)",
-    content: "URDIGIX built our beauty parlour and hairstyle website exactly how we imagined. The design looks premium, loads fast, and our customers can easily find our services online. After launching the website, our brand visibility and customer enquiries increased significantly.",
+    content: "URDIGIX built our beauty parlour and hairstyle website professionally, improved our online visibility and customer enquiries.",
     rating: 5,
-    projectLink: "https://www.navyastudio.in",
+    projectLink: "https://navyastudio.in",
     projectType: "Website Development",
     isVerified: true
   },
@@ -31,6 +33,18 @@ const testimonials: Testimonial[] = [
     content: "URDIGIX understood our business needs clearly and delivered a professional website with great attention to design and user experience. Their support and guidance throughout the project were excellent.",
     rating: 5,
     isVerified: true
+  },
+  {
+    name: "Leon Mutambala M. Ramazani Thierry",
+    role: "Founder",
+    company: "Fizitelecom (ISP & Hardware)",
+    content: "URDIGIX delivered our ISP website and hardware business solution professionally, with excellent support and a smooth experience that improved our business operations.",
+    rating: 5,
+    projectLink: "https://fizitelecom.com",
+    projectType: "ISP & Hardware Solutions",
+    isVerified: true,
+    avatarInitials: "FT",
+    isActive: true
   }
 ];
 
@@ -55,10 +69,10 @@ const TestimonialCard = ({ testimonial, index }: { testimonial: Testimonial; ind
       delay: index * 0.2,
       ease: [0.25, 0.46, 0.45, 0.94]
     }}
-    className="group relative"
+    className="group relative h-full flex flex-col"
   >
     {/* Card Container */}
-    <div className="relative h-full bg-white/90 backdrop-blur-xl rounded-3xl p-8 md:p-10 
+    <div className="relative flex flex-col flex-1 bg-white/90 backdrop-blur-xl rounded-3xl p-8 md:p-10 
       border border-orange-100/50 shadow-[0_8px_40px_-12px_rgba(251,146,60,0.15)]
       hover:shadow-[0_20px_60px_-15px_rgba(251,146,60,0.25)] hover:border-orange-200/70
       transition-all duration-500 ease-out hover:-translate-y-2">
@@ -100,7 +114,7 @@ const TestimonialCard = ({ testimonial, index }: { testimonial: Testimonial; ind
       </div>
 
       {/* Testimonial Content */}
-      <blockquote className="relative">
+      <blockquote className="relative flex-1">
         <p className="text-gray-700 text-base md:text-lg leading-relaxed mb-8 font-medium">
           "{testimonial.content}"
         </p>
@@ -113,9 +127,14 @@ const TestimonialCard = ({ testimonial, index }: { testimonial: Testimonial; ind
           <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-400 via-orange-500 to-amber-500 
             flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-orange-200/50
             group-hover:shadow-orange-300/60 transition-shadow duration-300">
-            {testimonial.name.charAt(0)}
+            {testimonial.avatarInitials ?? testimonial.name.charAt(0)}
           </div>
-          {testimonial.isVerified && (
+          {testimonial.isActive && (
+            <div className="absolute -top-1 -right-1 w-4 h-4 bg-white rounded-full flex items-center justify-center shadow-sm">
+              <span className="block w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse" />
+            </div>
+          )}
+          {!testimonial.isActive && testimonial.isVerified && (
             <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-sm">
               <CheckCircle className="w-4 h-4 text-green-500 fill-green-500" />
             </div>
@@ -228,8 +247,8 @@ const TestimonialsSectionComponent = () => {
           </p>
         </motion.div>
 
-        {/* Testimonials Grid */}
-        <div className="grid md:grid-cols-2 gap-8 md:gap-10 mb-20 md:mb-24">
+        {/* Testimonials Grid — 1 col mobile | 2 col tablet | 3 col desktop */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 mb-20 md:mb-24 items-stretch">
           {testimonials.map((testimonial, index) => (
             <TestimonialCard key={testimonial.name} testimonial={testimonial} index={index} />
           ))}

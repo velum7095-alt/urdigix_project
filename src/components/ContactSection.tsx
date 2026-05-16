@@ -205,11 +205,11 @@ const ContactSectionComponent = () => {
               <div>
                 <p className="font-semibold mb-1">Call Us</p>
                 <a 
-                  href="tel:+1234567890" 
+                  href="tel:+918142908550" 
                   className="text-muted-foreground hover:text-primary transition-colors" 
                   onClick={() => trackPhoneClick('contact_section')}
                 >
-                  +91 9100756461
+                  +91 8142908550
                 </a>
               </div>
             </div>
@@ -229,7 +229,7 @@ const ContactSectionComponent = () => {
 
             {/* WhatsApp CTA */}
             <a 
-              href="https://wa.me/1234567890?text=Hi%20URDIGIX!%20I'm%20interested%20in%20your%20digital%20marketing%20services." 
+              href="https://wa.me/918142908550?text=Hi%20URDIGIX!%20I'm%20interested%20in%20your%20digital%20marketing%20services." 
               target="_blank" 
               rel="noopener noreferrer" 
               onClick={() => trackWhatsAppClick('contact_section')} 
