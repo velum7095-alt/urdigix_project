@@ -28,6 +28,14 @@ Preview the production build locally:
 npm run preview
 ```
 
+## Project Areas
+
+- Public frontend routes are served by the Vite app.
+- Admin CRM routes live at `/auth` and `/admin`.
+- Backend API routes live under `/api/*` and run as Vercel serverless functions.
+
+See [Deployment](docs/deployment.md) for Vercel, domain, environment variable, and admin access setup.
+
 ## Scripts
 
 - `npm run dev` starts the local Vite development server.
