@@ -76,8 +76,8 @@ export const BusinessSettings = () => {
         >
             {/* Header */}
             <div>
-                <h2 className="text-2xl font-bold text-gray-900">Business Settings</h2>
-                <p className="text-gray-500">Configure your company details and billing preferences</p>
+                <h2 className="text-2xl font-bold text-foreground">Business Settings</h2>
+                <p className="text-muted-foreground">Configure your company details and billing preferences</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -116,7 +116,7 @@ export const BusinessSettings = () => {
                             <div>
                                 <Label>Phone</Label>
                                 <div className="relative mt-1">
-                                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/70" />
                                     <Input
                                         value={settings.company_phone}
                                         onChange={(e) => handleChange('company_phone', e.target.value)}
@@ -127,7 +127,7 @@ export const BusinessSettings = () => {
                             <div>
                                 <Label>Email</Label>
                                 <div className="relative mt-1">
-                                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/70" />
                                     <Input
                                         value={settings.company_email}
                                         onChange={(e) => handleChange('company_email', e.target.value)}
@@ -140,7 +140,7 @@ export const BusinessSettings = () => {
                         <div>
                             <Label>Website</Label>
                             <div className="relative mt-1">
-                                <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/70" />
                                 <Input
                                     value={settings.company_website}
                                     onChange={(e) => handleChange('company_website', e.target.value)}
@@ -152,7 +152,7 @@ export const BusinessSettings = () => {
                         <div>
                             <Label>Company Logo</Label>
                             <div className="mt-1 flex items-center gap-4">
-                                <div className="w-20 h-20 bg-gradient-to-br from-orange-500 to-amber-500 rounded-xl flex items-center justify-center text-white font-bold text-2xl">
+                                <div className="w-20 h-20 bg-primary rounded-xl flex items-center justify-center text-primary-foreground font-bold text-2xl shadow-lg shadow-primary/20">
                                     U
                                 </div>
                                 <Button variant="outline" size="sm">
@@ -205,10 +205,10 @@ export const BusinessSettings = () => {
                             </div>
                         </div>
 
-                        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <div className="flex items-center justify-between p-4 bg-secondary/50 rounded-lg">
                             <div>
                                 <p className="font-medium">Enable GST on Invoices</p>
-                                <p className="text-sm text-gray-500">Automatically add GST to quotations and invoices</p>
+                                <p className="text-sm text-muted-foreground">Automatically add GST to quotations and invoices</p>
                             </div>
                             <Switch
                                 checked={settings.enable_gst}
@@ -236,10 +236,10 @@ export const BusinessSettings = () => {
                             </div>
                         )}
 
-                        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <div className="flex items-center justify-between p-4 bg-secondary/50 rounded-lg">
                             <div>
                                 <p className="font-medium">Enable Discounts</p>
-                                <p className="text-sm text-gray-500">Allow adding discounts to quotations and invoices</p>
+                                <p className="text-sm text-muted-foreground">Allow adding discounts to quotations and invoices</p>
                             </div>
                             <Switch
                                 checked={settings.enable_discount}
@@ -361,19 +361,19 @@ export const BusinessSettings = () => {
                         </div>
 
                         <div className="space-y-3">
-                            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div className="flex items-center justify-between p-3 bg-secondary/50 rounded-lg">
                                 <span className="text-sm">Include bank details on invoice</span>
                                 <Switch defaultChecked />
                             </div>
-                            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div className="flex items-center justify-between p-3 bg-secondary/50 rounded-lg">
                                 <span className="text-sm">Include UPI QR code</span>
                                 <Switch defaultChecked />
                             </div>
-                            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div className="flex items-center justify-between p-3 bg-secondary/50 rounded-lg">
                                 <span className="text-sm">Auto-send email on status change</span>
                                 <Switch />
                             </div>
-                            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div className="flex items-center justify-between p-3 bg-secondary/50 rounded-lg">
                                 <span className="text-sm">Send payment reminders</span>
                                 <Switch />
                             </div>
@@ -387,7 +387,8 @@ export const BusinessSettings = () => {
                 <Button
                     onClick={handleSave}
                     disabled={isSaving}
-                    className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white px-8"
+                    variant="glow"
+                    className="px-8"
                 >
                     {isSaving ? (
                         <>

@@ -300,12 +300,12 @@ export const InvoicesManager = () => {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-900">Invoices</h2>
-                    <p className="text-gray-500">Create and manage client invoices</p>
+                    <h2 className="text-2xl font-bold text-foreground">Invoices</h2>
+                    <p className="text-muted-foreground">Create and manage client invoices</p>
                 </div>
                 <Button
                     onClick={handleNewInvoice}
-                    className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white shadow-lg"
+                    variant="glow"
                 >
                     <Plus className="w-4 h-4 mr-2" />
                     New Invoice
@@ -314,10 +314,10 @@ export const InvoicesManager = () => {
 
             {/* Stats Cards */}
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                <Card className="bg-gradient-to-br from-gray-50 to-gray-100 border-gray-200">
+                <Card className="bg-gradient-to-br from-secondary/60 to-secondary border-border">
                     <CardContent className="p-4">
-                        <p className="text-sm text-gray-500">Total</p>
-                        <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
+                        <p className="text-sm text-muted-foreground">Total</p>
+                        <p className="text-2xl font-bold text-foreground">{stats.total}</p>
                     </CardContent>
                 </Card>
                 <Card className="bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-200">
@@ -355,7 +355,7 @@ export const InvoicesManager = () => {
             {/* Filters */}
             <div className="flex flex-col sm:flex-row gap-4">
                 <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/70" />
                     <Input
                         placeholder="Search by client, business, or invoice number..."
                         value={searchQuery}
@@ -391,13 +391,13 @@ export const InvoicesManager = () => {
                             exit={{ opacity: 0, y: -20 }}
                             transition={{ delay: index * 0.05 }}
                         >
-                            <Card className="hover:shadow-lg transition-shadow border-gray-200">
+                            <Card className="glass-card transition-all hover:border-primary/30 hover:shadow-lg hover:shadow-primary/10">
                                 <CardContent className="p-4 sm:p-6">
                                     <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                                         {/* Left Section */}
                                         <div className="flex-1 space-y-2">
                                             <div className="flex items-center gap-3 flex-wrap">
-                                                <h3 className="font-bold text-gray-900">{invoice.invoice_number}</h3>
+                                                <h3 className="font-bold text-foreground">{invoice.invoice_number}</h3>
                                                 <StatusBadge status={invoice.status} />
                                                 {invoice.quotation_number && (
                                                     <Badge variant="outline" className="text-xs">
@@ -405,7 +405,7 @@ export const InvoicesManager = () => {
                                                     </Badge>
                                                 )}
                                             </div>
-                                            <div className="flex items-center gap-4 text-sm text-gray-500 flex-wrap">
+                                            <div className="flex items-center gap-4 text-sm text-muted-foreground flex-wrap">
                                                 <span className="flex items-center gap-1">
                                                     <User className="w-4 h-4" />
                                                     {invoice.client_name}
@@ -426,8 +426,8 @@ export const InvoicesManager = () => {
                                         {/* Right Section */}
                                         <div className="flex items-center gap-6">
                                             <div className="text-right">
-                                                <p className="text-sm text-gray-500">Total</p>
-                                                <p className="text-xl font-bold text-gray-900">₹{invoice.grand_total.toLocaleString()}</p>
+                                                <p className="text-sm text-muted-foreground">Total</p>
+                                                <p className="text-xl font-bold text-foreground">₹{invoice.grand_total.toLocaleString()}</p>
                                                 {invoice.balance_due > 0 && (
                                                     <p className="text-xs text-orange-600">
                                                         Due: ₹{invoice.balance_due.toLocaleString()}
@@ -484,11 +484,11 @@ export const InvoicesManager = () => {
                 </AnimatePresence>
 
                 {filteredInvoices.length === 0 && (
-                    <Card className="border-dashed border-2 border-gray-200">
+                    <Card className="border-dashed border-2 border-border">
                         <CardContent className="p-12 text-center">
-                            <Receipt className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                            <h3 className="text-lg font-medium text-gray-900 mb-2">No invoices found</h3>
-                            <p className="text-gray-500 mb-4">
+                            <Receipt className="w-12 h-12 text-muted-foreground/40 mx-auto mb-4" />
+                            <h3 className="text-lg font-medium text-foreground mb-2">No invoices found</h3>
+                            <p className="text-muted-foreground mb-4">
                                 {searchQuery || statusFilter !== 'all'
                                     ? 'Try adjusting your filters'
                                     : 'Create your first invoice to get started'}
@@ -543,7 +543,7 @@ export const InvoicesManager = () => {
 
                         {/* Client Details */}
                         <div className="border-t pt-4">
-                            <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                            <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
                                 <User className="w-4 h-4" /> Client Details
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -599,13 +599,13 @@ export const InvoicesManager = () => {
 
                         {/* Services */}
                         <div className="border-t pt-4">
-                            <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                            <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
                                 <Receipt className="w-4 h-4" /> Services & Pricing
                             </h3>
 
                             <div className="space-y-4">
                                 {items.map((item, index) => (
-                                    <Card key={index} className="p-4 bg-gray-50">
+                                    <Card key={index} className="p-4 bg-secondary/50">
                                         <div className="grid grid-cols-12 gap-3">
                                             <div className="col-span-12 md:col-span-4">
                                                 <Label className="text-xs">Service</Label>
@@ -691,7 +691,7 @@ export const InvoicesManager = () => {
                                                 type="checkbox"
                                                 checked={enableDiscount}
                                                 onChange={(e) => setEnableDiscount(e.target.checked)}
-                                                className="w-4 h-4 rounded border-gray-300"
+                                                className="w-4 h-4 rounded border-border"
                                             />
                                             <span className="text-sm">Enable Discount</span>
                                         </label>
@@ -725,7 +725,7 @@ export const InvoicesManager = () => {
                                                 type="checkbox"
                                                 checked={enableGst}
                                                 onChange={(e) => setEnableGst(e.target.checked)}
-                                                className="w-4 h-4 rounded border-gray-300"
+                                                className="w-4 h-4 rounded border-border"
                                             />
                                             <span className="text-sm">Apply GST</span>
                                         </label>
@@ -759,10 +759,10 @@ export const InvoicesManager = () => {
                                 </div>
 
                                 {/* Summary */}
-                                <Card className="p-4 bg-gray-50 min-w-[250px]">
+                                <Card className="p-4 bg-secondary/50 min-w-[250px]">
                                     <div className="space-y-2 text-sm">
                                         <div className="flex justify-between">
-                                            <span className="text-gray-500">Subtotal</span>
+                                            <span className="text-muted-foreground">Subtotal</span>
                                             <span>₹{formData.subtotal?.toLocaleString()}</span>
                                         </div>
                                         {enableDiscount && formData.discount_amount! > 0 && (
@@ -772,7 +772,7 @@ export const InvoicesManager = () => {
                                             </div>
                                         )}
                                         {enableGst && (
-                                            <div className="flex justify-between text-gray-500">
+                                            <div className="flex justify-between text-muted-foreground">
                                                 <span>GST ({formData.gst_percentage}%)</span>
                                                 <span>₹{formData.gst_amount?.toLocaleString()}</span>
                                             </div>
@@ -827,7 +827,7 @@ export const InvoicesManager = () => {
                             </Button>
                             <Button
                                 onClick={handleSaveInvoice}
-                                className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600"
+                                variant="glow"
                             >
                                 {editingInvoice ? 'Update Invoice' : 'Create Invoice'}
                             </Button>
@@ -845,58 +845,58 @@ export const InvoicesManager = () => {
                             <div className="flex justify-between items-start mb-8 pb-6 border-b-2 border-orange-500">
                                 <div>
                                     <h1 className="text-3xl font-bold text-orange-600">URDIGIX</h1>
-                                    <p className="text-gray-500 text-sm mt-1">Digital Marketing Agency</p>
-                                    <p className="text-gray-500 text-sm">hello@urdigix.com | +91 78930 40375</p>
-                                    <p className="text-gray-500 text-sm">India</p>
+                                    <p className="text-muted-foreground text-sm mt-1">Digital Marketing Agency</p>
+                                    <p className="text-muted-foreground text-sm">hello@urdigix.com | +91 78930 40375</p>
+                                    <p className="text-muted-foreground text-sm">India</p>
                                 </div>
                                 <div className="text-right">
-                                    <h2 className="text-2xl font-bold text-gray-900">INVOICE</h2>
-                                    <p className="text-gray-600 font-medium mt-2">{previewInvoice.invoice_number}</p>
-                                    <p className="text-sm text-gray-500">Date: {format(new Date(previewInvoice.invoice_date), 'dd MMM yyyy')}</p>
-                                    <p className="text-sm text-gray-500">Due: {format(new Date(previewInvoice.due_date), 'dd MMM yyyy')}</p>
+                                    <h2 className="text-2xl font-bold text-foreground">INVOICE</h2>
+                                    <p className="text-muted-foreground font-medium mt-2">{previewInvoice.invoice_number}</p>
+                                    <p className="text-sm text-muted-foreground">Date: {format(new Date(previewInvoice.invoice_date), 'dd MMM yyyy')}</p>
+                                    <p className="text-sm text-muted-foreground">Due: {format(new Date(previewInvoice.due_date), 'dd MMM yyyy')}</p>
                                     <StatusBadge status={previewInvoice.status} />
                                 </div>
                             </div>
 
                             {/* Client Info */}
                             <div className="mb-8">
-                                <h3 className="text-sm font-semibold text-gray-500 uppercase mb-2">Bill To</h3>
-                                <p className="font-bold text-gray-900">{previewInvoice.client_name}</p>
+                                <h3 className="text-sm font-semibold text-muted-foreground uppercase mb-2">Bill To</h3>
+                                <p className="font-bold text-foreground">{previewInvoice.client_name}</p>
                                 {previewInvoice.client_business_name && (
-                                    <p className="text-gray-600">{previewInvoice.client_business_name}</p>
+                                    <p className="text-muted-foreground">{previewInvoice.client_business_name}</p>
                                 )}
                                 {previewInvoice.client_email && (
-                                    <p className="text-gray-500 text-sm">{previewInvoice.client_email}</p>
+                                    <p className="text-muted-foreground text-sm">{previewInvoice.client_email}</p>
                                 )}
                                 {previewInvoice.client_phone && (
-                                    <p className="text-gray-500 text-sm">{previewInvoice.client_phone}</p>
+                                    <p className="text-muted-foreground text-sm">{previewInvoice.client_phone}</p>
                                 )}
                             </div>
 
                             {/* Items Table */}
                             <table className="w-full mb-8">
                                 <thead>
-                                    <tr className="bg-gray-100">
-                                        <th className="text-left p-3 font-semibold text-gray-700">#</th>
-                                        <th className="text-left p-3 font-semibold text-gray-700">Service</th>
-                                        <th className="text-center p-3 font-semibold text-gray-700">Qty</th>
-                                        <th className="text-right p-3 font-semibold text-gray-700">Rate</th>
-                                        <th className="text-right p-3 font-semibold text-gray-700">Amount</th>
+                                    <tr className="bg-secondary">
+                                        <th className="text-left p-3 font-semibold text-foreground/80">#</th>
+                                        <th className="text-left p-3 font-semibold text-foreground/80">Service</th>
+                                        <th className="text-center p-3 font-semibold text-foreground/80">Qty</th>
+                                        <th className="text-right p-3 font-semibold text-foreground/80">Rate</th>
+                                        <th className="text-right p-3 font-semibold text-foreground/80">Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {previewInvoice.items?.map((item, index) => (
                                         <tr key={index} className="border-b">
-                                            <td className="p-3 text-gray-600">{index + 1}</td>
+                                            <td className="p-3 text-muted-foreground">{index + 1}</td>
                                             <td className="p-3">
-                                                <p className="font-medium text-gray-900">{item.service_name}</p>
+                                                <p className="font-medium text-foreground">{item.service_name}</p>
                                                 {item.description && (
-                                                    <p className="text-sm text-gray-500">{item.description}</p>
+                                                    <p className="text-sm text-muted-foreground">{item.description}</p>
                                                 )}
                                             </td>
-                                            <td className="p-3 text-center text-gray-600">{item.quantity}</td>
-                                            <td className="p-3 text-right text-gray-600">₹{item.rate.toLocaleString()}</td>
-                                            <td className="p-3 text-right font-medium text-gray-900">₹{item.amount.toLocaleString()}</td>
+                                            <td className="p-3 text-center text-muted-foreground">{item.quantity}</td>
+                                            <td className="p-3 text-right text-muted-foreground">₹{item.rate.toLocaleString()}</td>
+                                            <td className="p-3 text-right font-medium text-foreground">₹{item.amount.toLocaleString()}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -906,7 +906,7 @@ export const InvoicesManager = () => {
                             <div className="flex justify-end mb-8">
                                 <div className="w-64">
                                     <div className="flex justify-between py-2">
-                                        <span className="text-gray-500">Subtotal</span>
+                                        <span className="text-muted-foreground">Subtotal</span>
                                         <span>₹{previewInvoice.subtotal.toLocaleString()}</span>
                                     </div>
                                     {previewInvoice.discount_amount > 0 && (
@@ -916,7 +916,7 @@ export const InvoicesManager = () => {
                                         </div>
                                     )}
                                     {previewInvoice.gst_amount > 0 && (
-                                        <div className="flex justify-between py-2 text-gray-500">
+                                        <div className="flex justify-between py-2 text-muted-foreground">
                                             <span>GST ({previewInvoice.gst_percentage}%)</span>
                                             <span>₹{previewInvoice.gst_amount.toLocaleString()}</span>
                                         </div>
@@ -939,7 +939,7 @@ export const InvoicesManager = () => {
                             </div>
 
                             {/* Footer */}
-                            <div className="mt-12 pt-6 border-t text-center text-gray-500 text-sm">
+                            <div className="mt-12 pt-6 border-t text-center text-muted-foreground text-sm">
                                 <p>Thank you for your business!</p>
                                 <p className="mt-2">URDIGIX | www.urdigix.com | hello@urdigix.com</p>
                             </div>
@@ -966,11 +966,11 @@ export const InvoicesManager = () => {
 
                     {paymentInvoice && (
                         <div className="space-y-4 py-4">
-                            <div className="bg-gray-50 p-4 rounded-lg space-y-2">
+                            <div className="bg-secondary/50 p-4 rounded-lg space-y-2">
                                 <p className="font-medium">{paymentInvoice.invoice_number}</p>
-                                <p className="text-sm text-gray-500">{paymentInvoice.client_name}</p>
+                                <p className="text-sm text-muted-foreground">{paymentInvoice.client_name}</p>
                                 <div className="flex justify-between pt-2 border-t">
-                                    <span className="text-gray-500">Balance Due</span>
+                                    <span className="text-muted-foreground">Balance Due</span>
                                     <span className="font-bold text-orange-600">₹{paymentInvoice.balance_due.toLocaleString()}</span>
                                 </div>
                             </div>

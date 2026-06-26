@@ -2,8 +2,8 @@ import { useState, useEffect, createContext, useContext, ReactNode } from 'react
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 
-// Production Mode
-const DEV_MODE = false;
+// Local-only opt-in for verifying the CRM without production credentials.
+const DEV_MODE = import.meta.env.DEV && import.meta.env.VITE_DEV_ADMIN === 'true';
 
 interface AuthContextType {
   user: User | null;
@@ -26,6 +26,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isDevMode, setIsDevMode] = useState(false);
 
   useEffect(() => {
+    if (DEV_MODE) {
+      const devUser = {
+        id: 'local-dev-admin',
+        email: 'dev@urdigix.local',
+      } as User;
+
+      setUser(devUser);
+      setSession(null);
+      setIsAdmin(true);
+      setIsDevMode(true);
+      setIsLoading(false);
+      return;
+    }
+
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {

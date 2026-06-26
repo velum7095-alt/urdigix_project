@@ -28,8 +28,9 @@ export const SecurityHeaders = () => {
             }
             robotsMeta.setAttribute('content', 'noindex, nofollow, noarchive, nosnippet');
 
-            // Update document title to not leak admin info
-            document.title = 'URDIGIX | Login';
+            document.title = location.pathname.startsWith('/admin')
+                ? 'URDIGIX | CRM Workspace'
+                : 'URDIGIX | Login';
         }
 
         // Cleanup function to restore original robots meta on route change

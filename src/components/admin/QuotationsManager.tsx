@@ -282,12 +282,12 @@ export const QuotationsManager = () => {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-900">Quotations</h2>
-                    <p className="text-gray-500">Create and manage client quotations</p>
+                    <h2 className="text-2xl font-bold text-foreground">Quotations</h2>
+                    <p className="text-muted-foreground">Create and manage client quotations</p>
                 </div>
                 <Button
                     onClick={handleNewQuotation}
-                    className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white shadow-lg"
+                    variant="glow"
                 >
                     <Plus className="w-4 h-4 mr-2" />
                     New Quotation
@@ -296,10 +296,10 @@ export const QuotationsManager = () => {
 
             {/* Stats Cards */}
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                <Card className="bg-gradient-to-br from-gray-50 to-gray-100 border-gray-200">
+                <Card className="bg-gradient-to-br from-secondary/60 to-secondary border-border">
                     <CardContent className="p-4">
-                        <p className="text-sm text-gray-500">Total</p>
-                        <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
+                        <p className="text-sm text-muted-foreground">Total</p>
+                        <p className="text-2xl font-bold text-foreground">{stats.total}</p>
                     </CardContent>
                 </Card>
                 <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
@@ -314,10 +314,10 @@ export const QuotationsManager = () => {
                         <p className="text-2xl font-bold text-green-700">{stats.accepted}</p>
                     </CardContent>
                 </Card>
-                <Card className="bg-gradient-to-br from-gray-50 to-gray-100 border-gray-200">
+                <Card className="bg-gradient-to-br from-secondary/60 to-secondary border-border">
                     <CardContent className="p-4">
-                        <p className="text-sm text-gray-500">Draft</p>
-                        <p className="text-2xl font-bold text-gray-700">{stats.draft}</p>
+                        <p className="text-sm text-muted-foreground">Draft</p>
+                        <p className="text-2xl font-bold text-foreground/80">{stats.draft}</p>
                     </CardContent>
                 </Card>
                 <Card className="bg-gradient-to-br from-orange-50 to-amber-100 border-orange-200">
@@ -331,7 +331,7 @@ export const QuotationsManager = () => {
             {/* Filters */}
             <div className="flex flex-col sm:flex-row gap-4">
                 <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/70" />
                     <Input
                         placeholder="Search by client, business, or quotation number..."
                         value={searchQuery}
@@ -366,16 +366,16 @@ export const QuotationsManager = () => {
                             exit={{ opacity: 0, y: -20 }}
                             transition={{ delay: index * 0.05 }}
                         >
-                            <Card className="hover:shadow-lg transition-shadow border-gray-200">
+                            <Card className="glass-card transition-all hover:border-primary/30 hover:shadow-lg hover:shadow-primary/10">
                                 <CardContent className="p-4 sm:p-6">
                                     <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                                         {/* Left Section */}
                                         <div className="flex-1 space-y-2">
                                             <div className="flex items-center gap-3 flex-wrap">
-                                                <h3 className="font-bold text-gray-900">{quotation.quotation_number}</h3>
+                                                <h3 className="font-bold text-foreground">{quotation.quotation_number}</h3>
                                                 <StatusBadge status={quotation.status} />
                                             </div>
-                                            <div className="flex items-center gap-4 text-sm text-gray-500 flex-wrap">
+                                            <div className="flex items-center gap-4 text-sm text-muted-foreground flex-wrap">
                                                 <span className="flex items-center gap-1">
                                                     <User className="w-4 h-4" />
                                                     {quotation.client_name}
@@ -396,8 +396,8 @@ export const QuotationsManager = () => {
                                         {/* Right Section */}
                                         <div className="flex items-center gap-4">
                                             <div className="text-right">
-                                                <p className="text-sm text-gray-500">Grand Total</p>
-                                                <p className="text-xl font-bold text-gray-900">₹{quotation.grand_total.toLocaleString()}</p>
+                                                <p className="text-sm text-muted-foreground">Grand Total</p>
+                                                <p className="text-xl font-bold text-foreground">₹{quotation.grand_total.toLocaleString()}</p>
                                             </div>
 
                                             <DropdownMenu>
@@ -449,11 +449,11 @@ export const QuotationsManager = () => {
                 </AnimatePresence>
 
                 {filteredQuotations.length === 0 && (
-                    <Card className="border-dashed border-2 border-gray-200">
+                    <Card className="border-dashed border-2 border-border">
                         <CardContent className="p-12 text-center">
-                            <FileText className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                            <h3 className="text-lg font-medium text-gray-900 mb-2">No quotations found</h3>
-                            <p className="text-gray-500 mb-4">
+                            <FileText className="w-12 h-12 text-muted-foreground/40 mx-auto mb-4" />
+                            <h3 className="text-lg font-medium text-foreground mb-2">No quotations found</h3>
+                            <p className="text-muted-foreground mb-4">
                                 {searchQuery || statusFilter !== 'all'
                                     ? 'Try adjusting your filters'
                                     : 'Create your first quotation to get started'}
@@ -516,7 +516,7 @@ export const QuotationsManager = () => {
 
                         {/* Client Details */}
                         <div className="border-t pt-4">
-                            <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                            <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
                                 <User className="w-4 h-4" /> Client Details
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -572,13 +572,13 @@ export const QuotationsManager = () => {
 
                         {/* Services */}
                         <div className="border-t pt-4">
-                            <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                            <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
                                 <FileCheck className="w-4 h-4" /> Services & Pricing
                             </h3>
 
                             <div className="space-y-4">
                                 {items.map((item, index) => (
-                                    <Card key={index} className="p-4 bg-gray-50">
+                                    <Card key={index} className="p-4 bg-secondary/50">
                                         <div className="grid grid-cols-12 gap-3">
                                             <div className="col-span-12 md:col-span-4">
                                                 <Label className="text-xs">Service</Label>
@@ -664,7 +664,7 @@ export const QuotationsManager = () => {
                                                 type="checkbox"
                                                 checked={enableDiscount}
                                                 onChange={(e) => setEnableDiscount(e.target.checked)}
-                                                className="w-4 h-4 rounded border-gray-300"
+                                                className="w-4 h-4 rounded border-border"
                                             />
                                             <span className="text-sm">Enable Discount</span>
                                         </label>
@@ -698,7 +698,7 @@ export const QuotationsManager = () => {
                                                 type="checkbox"
                                                 checked={enableGst}
                                                 onChange={(e) => setEnableGst(e.target.checked)}
-                                                className="w-4 h-4 rounded border-gray-300"
+                                                className="w-4 h-4 rounded border-border"
                                             />
                                             <span className="text-sm">Apply GST</span>
                                         </label>
@@ -722,10 +722,10 @@ export const QuotationsManager = () => {
                                 </div>
 
                                 {/* Summary */}
-                                <Card className="p-4 bg-gray-50 min-w-[250px]">
+                                <Card className="p-4 bg-secondary/50 min-w-[250px]">
                                     <div className="space-y-2 text-sm">
                                         <div className="flex justify-between">
-                                            <span className="text-gray-500">Subtotal</span>
+                                            <span className="text-muted-foreground">Subtotal</span>
                                             <span>₹{formData.subtotal?.toLocaleString()}</span>
                                         </div>
                                         {enableDiscount && formData.discount_amount! > 0 && (
@@ -735,7 +735,7 @@ export const QuotationsManager = () => {
                                             </div>
                                         )}
                                         {enableGst && (
-                                            <div className="flex justify-between text-gray-500">
+                                            <div className="flex justify-between text-muted-foreground">
                                                 <span>GST ({formData.gst_percentage}%)</span>
                                                 <span>₹{formData.gst_amount?.toLocaleString()}</span>
                                             </div>
@@ -782,7 +782,7 @@ export const QuotationsManager = () => {
                             </Button>
                             <Button
                                 onClick={handleSaveQuotation}
-                                className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600"
+                                variant="glow"
                             >
                                 {editingQuotation ? 'Update Quotation' : 'Create Quotation'}
                             </Button>
@@ -800,60 +800,60 @@ export const QuotationsManager = () => {
                             <div className="flex justify-between items-start mb-8 pb-6 border-b-2 border-orange-500">
                                 <div>
                                     <h1 className="text-3xl font-bold text-orange-600">URDIGIX</h1>
-                                    <p className="text-gray-500 text-sm mt-1">Digital Marketing Agency</p>
-                                    <p className="text-gray-500 text-sm">hello@urdigix.com | +91 78930 40375</p>
-                                    <p className="text-gray-500 text-sm">India</p>
+                                    <p className="text-muted-foreground text-sm mt-1">Digital Marketing Agency</p>
+                                    <p className="text-muted-foreground text-sm">hello@urdigix.com | +91 78930 40375</p>
+                                    <p className="text-muted-foreground text-sm">India</p>
                                 </div>
                                 <div className="text-right">
-                                    <h2 className="text-2xl font-bold text-gray-900">QUOTATION</h2>
-                                    <p className="text-gray-600 font-medium mt-2">{previewQuotation.quotation_number}</p>
-                                    <p className="text-sm text-gray-500">Date: {format(new Date(previewQuotation.quotation_date), 'dd MMM yyyy')}</p>
-                                    <p className="text-sm text-gray-500">Valid Until: {format(new Date(previewQuotation.valid_until), 'dd MMM yyyy')}</p>
+                                    <h2 className="text-2xl font-bold text-foreground">QUOTATION</h2>
+                                    <p className="text-muted-foreground font-medium mt-2">{previewQuotation.quotation_number}</p>
+                                    <p className="text-sm text-muted-foreground">Date: {format(new Date(previewQuotation.quotation_date), 'dd MMM yyyy')}</p>
+                                    <p className="text-sm text-muted-foreground">Valid Until: {format(new Date(previewQuotation.valid_until), 'dd MMM yyyy')}</p>
                                 </div>
                             </div>
 
                             {/* Client Info */}
                             <div className="mb-8">
-                                <h3 className="text-sm font-semibold text-gray-500 uppercase mb-2">Bill To</h3>
-                                <p className="font-bold text-gray-900">{previewQuotation.client_name}</p>
+                                <h3 className="text-sm font-semibold text-muted-foreground uppercase mb-2">Bill To</h3>
+                                <p className="font-bold text-foreground">{previewQuotation.client_name}</p>
                                 {previewQuotation.client_business_name && (
-                                    <p className="text-gray-600">{previewQuotation.client_business_name}</p>
+                                    <p className="text-muted-foreground">{previewQuotation.client_business_name}</p>
                                 )}
                                 {previewQuotation.client_email && (
-                                    <p className="text-gray-500 text-sm">{previewQuotation.client_email}</p>
+                                    <p className="text-muted-foreground text-sm">{previewQuotation.client_email}</p>
                                 )}
                                 {previewQuotation.client_phone && (
-                                    <p className="text-gray-500 text-sm">{previewQuotation.client_phone}</p>
+                                    <p className="text-muted-foreground text-sm">{previewQuotation.client_phone}</p>
                                 )}
                                 {previewQuotation.client_address && (
-                                    <p className="text-gray-500 text-sm">{previewQuotation.client_address}</p>
+                                    <p className="text-muted-foreground text-sm">{previewQuotation.client_address}</p>
                                 )}
                             </div>
 
                             {/* Items Table */}
                             <table className="w-full mb-8">
                                 <thead>
-                                    <tr className="bg-gray-100">
-                                        <th className="text-left p-3 font-semibold text-gray-700">#</th>
-                                        <th className="text-left p-3 font-semibold text-gray-700">Service</th>
-                                        <th className="text-center p-3 font-semibold text-gray-700">Qty</th>
-                                        <th className="text-right p-3 font-semibold text-gray-700">Rate</th>
-                                        <th className="text-right p-3 font-semibold text-gray-700">Amount</th>
+                                    <tr className="bg-secondary">
+                                        <th className="text-left p-3 font-semibold text-foreground/80">#</th>
+                                        <th className="text-left p-3 font-semibold text-foreground/80">Service</th>
+                                        <th className="text-center p-3 font-semibold text-foreground/80">Qty</th>
+                                        <th className="text-right p-3 font-semibold text-foreground/80">Rate</th>
+                                        <th className="text-right p-3 font-semibold text-foreground/80">Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {previewQuotation.items?.map((item, index) => (
                                         <tr key={index} className="border-b">
-                                            <td className="p-3 text-gray-600">{index + 1}</td>
+                                            <td className="p-3 text-muted-foreground">{index + 1}</td>
                                             <td className="p-3">
-                                                <p className="font-medium text-gray-900">{item.service_name}</p>
+                                                <p className="font-medium text-foreground">{item.service_name}</p>
                                                 {item.description && (
-                                                    <p className="text-sm text-gray-500">{item.description}</p>
+                                                    <p className="text-sm text-muted-foreground">{item.description}</p>
                                                 )}
                                             </td>
-                                            <td className="p-3 text-center text-gray-600">{item.quantity}</td>
-                                            <td className="p-3 text-right text-gray-600">₹{item.rate.toLocaleString()}</td>
-                                            <td className="p-3 text-right font-medium text-gray-900">₹{item.amount.toLocaleString()}</td>
+                                            <td className="p-3 text-center text-muted-foreground">{item.quantity}</td>
+                                            <td className="p-3 text-right text-muted-foreground">₹{item.rate.toLocaleString()}</td>
+                                            <td className="p-3 text-right font-medium text-foreground">₹{item.amount.toLocaleString()}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -863,7 +863,7 @@ export const QuotationsManager = () => {
                             <div className="flex justify-end mb-8">
                                 <div className="w-64">
                                     <div className="flex justify-between py-2">
-                                        <span className="text-gray-500">Subtotal</span>
+                                        <span className="text-muted-foreground">Subtotal</span>
                                         <span>₹{previewQuotation.subtotal.toLocaleString()}</span>
                                     </div>
                                     {previewQuotation.discount_amount > 0 && (
@@ -873,7 +873,7 @@ export const QuotationsManager = () => {
                                         </div>
                                     )}
                                     {previewQuotation.gst_amount > 0 && (
-                                        <div className="flex justify-between py-2 text-gray-500">
+                                        <div className="flex justify-between py-2 text-muted-foreground">
                                             <span>GST ({previewQuotation.gst_percentage}%)</span>
                                             <span>₹{previewQuotation.gst_amount.toLocaleString()}</span>
                                         </div>
@@ -888,20 +888,20 @@ export const QuotationsManager = () => {
                             {/* Terms */}
                             {previewQuotation.payment_terms && (
                                 <div className="mb-6">
-                                    <h3 className="font-semibold text-gray-900 mb-2">Payment Terms</h3>
-                                    <p className="text-gray-600 text-sm">{previewQuotation.payment_terms}</p>
+                                    <h3 className="font-semibold text-foreground mb-2">Payment Terms</h3>
+                                    <p className="text-muted-foreground text-sm">{previewQuotation.payment_terms}</p>
                                 </div>
                             )}
 
                             {previewQuotation.notes && (
                                 <div className="mb-6">
-                                    <h3 className="font-semibold text-gray-900 mb-2">Notes</h3>
-                                    <p className="text-gray-600 text-sm">{previewQuotation.notes}</p>
+                                    <h3 className="font-semibold text-foreground mb-2">Notes</h3>
+                                    <p className="text-muted-foreground text-sm">{previewQuotation.notes}</p>
                                 </div>
                             )}
 
                             {/* Footer */}
-                            <div className="mt-12 pt-6 border-t text-center text-gray-500 text-sm">
+                            <div className="mt-12 pt-6 border-t text-center text-muted-foreground text-sm">
                                 <p>Thank you for your business!</p>
                                 <p className="mt-2">URDIGIX | www.urdigix.com | hello@urdigix.com</p>
                             </div>
