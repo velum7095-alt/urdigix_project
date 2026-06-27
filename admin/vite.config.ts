@@ -13,7 +13,7 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8081,
     hmr: {
-      overlay: false,
+      overlay: true,
     },
   },
   plugins: [react()],
@@ -65,4 +65,3 @@ export default defineConfig(({ mode }) => ({
   // COMPATIBILITY: Allow NEXT_PUBLIC_ variables (standard for Supabase/Vercel)
   envPrefix: ['VITE_', 'NEXT_PUBLIC_'],
 }));
-

@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>URDIGIX CRM</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0d1117;--sidebar:#161b22;--card:#1c2230;--border:#30363d;--orange:#f97316;--orange2:#ea580c;--text:#e6edf3;--muted:#8b949e;--green:#22c55e;--red:#ef4444;--yellow:#eab308;--blue:#3b82f6;--purple:#a855f7}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;overflow:hidden}
+#sidebar{width:220px;min-width:220px;background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100}
+.logo{padding:20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--orange),var(--orange2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.logo-text{font-weight:800;font-size:15px}
+.logo-sub{font-size:10px;color:var(--muted)}
+nav{flex:1;padding:12px 8px;overflow-y:auto}
+.nav-label{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:1px;padding:8px 8px 4px;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;cursor:pointer;font-size:13.5px;color:var(--muted);transition:.15s;border:none;background:none;width:100%;text-align:left;margin-bottom:2px}
+.nav-item:hover{background:rgba(255,255,255,.06);color:var(--text)}
+.nav-item.active{background:rgba(249,115,22,.12);color:var(--orange);font-weight:600}
+.nav-item svg{width:16px;height:16px;flex-shrink:0}
+.nav-footer{padding:12px 8px;border-top:1px solid var(--border)}
+#main{margin-left:220px;flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden}
+#topbar{background:var(--sidebar);border-bottom:1px solid var(--border);padding:12px 28px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.topbar-title{font-size:18px;font-weight:700}
+.avatar{width:34px;height:34px;background:linear-gradient(135deg,var(--orange),var(--purple));border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff}
+#content{flex:1;overflow-y:auto;padding:24px 28px}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:24px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.stat-card.orange::before{background:var(--orange)}.stat-card.green::before{background:var(--green)}.stat-card.blue::before{background:var(--blue)}.stat-card.purple::before{background:var(--purple)}.stat-card.red::before{background:var(--red)}
+.stat-label{font-size:11px;color:var(--muted);font-weight:600;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+.stat-value{font-size:26px;font-weight:800;margin-bottom:4px}
+.stat-sub{font-size:12px;color:var(--muted)}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.section-title{font-size:16px;font-weight:700}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:20px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{padding:12px 16px;text-align:left;font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02)}
+td{padding:12px 16px;border-bottom:1px solid rgba(48,54,61,.5);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.02)}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.badge-draft{background:rgba(139,148,158,.15);color:#8b949e}
+.badge-sent,.badge-new-lead{background:rgba(59,130,246,.15);color:#60a5fa}
+.badge-accepted,.badge-paid,.badge-active,.badge-closed-won{background:rgba(34,197,94,.15);color:#4ade80}
+.badge-rejected,.badge-overdue,.badge-cancelled,.badge-closed-lost{background:rgba(239,68,68,.15);color:#f87171}
+.badge-unpaid,.badge-negotiating{background:rgba(234,179,8,.15);color:#fbbf24}
+.badge-completed{background:rgba(168,85,247,.15);color:#c084fc}
+.badge-in-progress{background:rgba(249,115,22,.15);color:#fb923c}
+.badge-proposal-sent{background:rgba(168,85,247,.15);color:#c084fc}
+.badge-published{background:rgba(34,197,94,.15);color:#4ade80}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:.15s}
+.btn:hover{filter:brightness(1.1)}
+.btn-primary{background:var(--orange);color:#fff}
+.btn-ghost{background:rgba(255,255,255,.06);color:var(--text);border:1px solid var(--border)}
+.btn-sm{padding:4px 10px;font-size:12px;border-radius:6px}
+.btn-red{background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.2)}
+.btn-green{background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.2)}
+.btn-blue{background:rgba(59,130,246,.15);color:#60a5fa;border:1px solid rgba(59,130,246,.2)}
+.btn-purple{background:rgba(168,85,247,.15);color:#c084fc;border:1px solid rgba(168,85,247,.2)}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:16px;width:90%;max-width:640px;max-height:90vh;overflow-y:auto;padding:28px}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.modal-title{font-size:17px;font-weight:700}
+.modal-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:24px;line-height:1;padding:0 4px}
+.modal-close:hover{color:var(--text)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+input,select,textarea{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-size:13.5px;outline:none;width:100%;transition:.15s;font-family:inherit}
+input:focus,select:focus,textarea:focus{border-color:var(--orange)}
+textarea{resize:vertical;min-height:80px}
+select option{background:#1c2230;color:var(--text)}
+.form-actions{display:flex;gap:12px;justify-content:flex-end;margin-top:20px;padding-top:20px;border-top:1px solid var(--border)}
+.line-items{margin-bottom:16px}
+.line-item{display:grid;grid-template-columns:1fr 70px 110px 36px;gap:8px;align-items:center;margin-bottom:8px}
+.line-item input{margin:0}
+.li-remove{background:none;border:none;color:var(--red);cursor:pointer;font-size:20px;padding:4px;border-radius:6px;line-height:1}
+.li-remove:hover{background:rgba(239,68,68,.1)}
+.activity-list{padding:16px}
+.activity-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid rgba(48,54,61,.4)}
+.activity-item:last-child{border-bottom:none}
+.activity-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.activity-text{font-size:13px}.activity-time{font-size:11px;color:var(--muted);margin-top:2px}
+.chart-bar-wrap{display:flex;align-items:flex-end;gap:5px;height:80px;padding:0 4px}
+.chart-bar{background:linear-gradient(to top,var(--orange),var(--orange2));border-radius:4px 4px 0 0;flex:1;min-width:18px;cursor:pointer;position:relative}
+.chart-bar:hover::after{content:attr(data-val);position:absolute;top:-26px;left:50%;transform:translateX(-50%);background:var(--orange);color:#fff;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;white-space:nowrap;z-index:10}
+.chart-labels{display:flex;gap:5px;padding:4px 4px 0;font-size:10px;color:var(--muted)}
+.chart-labels span{flex:1;text-align:center}
+tr.overdue td{background:rgba(239,68,68,.04)}
+tr.overdue td:first-child{border-left:2px solid var(--red)}
+.view{display:none}.view.active{display:block}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+#pdf-print{display:none}
+.pdf-c{font-family:Georgia,serif;color:#111;line-height:1.7;padding:60px;max-width:800px;margin:0 auto}
+.pdf-c h1{font-size:26px;text-align:center;margin-bottom:6px}
+.pdf-c .sub{text-align:center;color:#666;margin-bottom:36px;font-style:italic}
+.pdf-c h2{font-size:13px;font-weight:700;border-bottom:2px solid #111;padding-bottom:6px;margin:24px 0 12px;text-transform:uppercase}
+.pdf-c table{width:100%;border-collapse:collapse;font-size:13px}
+.pdf-c table th,.pdf-c table td{border:1px solid #ccc;padding:8px 12px;text-align:left}
+.pdf-c table th{background:#f3f4f6;font-weight:600}
+.pdf-c .sig-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;margin-top:40px}
+.pdf-c .sig-box{border-top:1px solid #111;padding-top:8px;font-size:13px}
+@media print{body>*:not(#pdf-print){display:none!important}#pdf-print{display:block!important;position:fixed;inset:0;background:#fff;z-index:9999;overflow:auto}}
+</style>
+</head>
+<body>
+<aside id="sidebar">
+  <div class="logo">
+    <div class="logo-icon">&#9889;</div>
+    <div><div class="logo-text">URDIGIX</div><div class="logo-sub">CRM Workspace</div></div>
+  </div>
+  <nav>
+    <div class="nav-label">Main</div>
+    <button class="nav-item active" data-view="dashboard" data-title="Dashboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard
+    </button>
+    <button class="nav-item" data-view="quotations" data-title="Quotations">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Quotations
+    </button>
+    <button class="nav-item" data-view="invoices" data-title="Invoices">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Invoices
+    </button>
+    <button class="nav-item" data-view="followups" data-title="Client Follow-ups">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Client Follow-ups
+    </button>
+    <button class="nav-item" data-view="contracts" data-title="Contracts">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7l-8-4-8 4m16 0v10l-8 4-8-4V7"/></svg>Contracts
+    </button>
+    <div class="nav-label" style="margin-top:8px">Manage</div>
+    <button class="nav-item" data-view="cms" data-title="Content Management">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>CMS
+    </button>
+    <button class="nav-item" data-view="messages" data-title="Messages">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Messages
+    </button>
+    <button class="nav-item" data-view="analytics" data-title="Analytics">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Analytics
+    </button>
+    <button class="nav-item" data-view="settings" data-title="Settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Settings
+    </button>
+  </nav>
+  <div class="nav-footer">
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 4px">
+      <div class="avatar">AD</div>
+      <div><div style="font-size:13px;font-weight:600">Admin</div><div style="font-size:11px;color:var(--muted)">urdigix.com</div></div>
+    </div>
+  </div>
+</aside>
+
+<div id="main">
+  <div id="topbar">
+    <div class="topbar-title" id="page-title">Dashboard</div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="font-size:12px;color:var(--muted)" id="topbar-date"></div>
+      <div class="avatar">AD</div>
+    </div>
+  </div>
+  <div id="content">
+
+    <div id="view-dashboard" class="view active">
+      <div class="stat-grid" id="dash-stats"></div>
+      <div style="display:grid;grid-template-columns:1fr 320px;gap:20px">
+        <div class="card">
+          <div style="padding:14px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:14px">Monthly Revenue (KES)</div>
+          <div style="padding:16px 20px"><div class="chart-bar-wrap" id="rev-chart"></div><div class="chart-labels" id="rev-labels"></div></div>
+        </div>
+        <div class="card">
+          <div style="padding:14px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:14px">Recent Activity</div>
+          <div class="activity-list" id="activity-list"></div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div class="card">
+          <div style="padding:14px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:14px">Recent Quotations</div>
+          <div class="table-wrap"><table><thead><tr><th>Client</th><th>Amount</th><th>Status</th></tr></thead><tbody id="dash-quotes"></tbody></table></div>
+        </div>
+        <div class="card">
+          <div style="padding:14px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:14px">Pending Follow-ups</div>
+          <div class="table-wrap"><table><thead><tr><th>Client</th><th>Due</th><th>Status</th></tr></thead><tbody id="dash-fu"></tbody></table></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="view-quotations" class="view">
+      <div class="section-header">
+        <div><div class="section-title">Quotations</div><div style="font-size:12px;color:var(--muted);margin-top:2px">Manage client proposals</div></div>
+        <button class="btn btn-primary" id="btn-new-q">+ New Quotation</button>
+      </div>
+      <div class="card"><div class="table-wrap"><table>
+        <thead><tr><th>ID</th><th>Client</th><th>Service</th><th>Amount (KES)</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+        <tbody id="q-table"></tbody>
+      </table></div></div>
+    </div>
+
+    <div id="view-invoices" class="view">
+      <div class="section-header">
+        <div><div class="section-title">Invoices</div><div style="font-size:12px;color:var(--muted);margin-top:2px">Track payments & billing</div></div>
+        <button class="btn btn-primary" id="btn-new-inv">+ New Invoice</button>
+      </div>
+      <div class="card"><div class="table-wrap"><table>
+        <thead><tr><th>ID</th><th>Client</th><th>Service</th><th>Amount (KES)</th><th>Status</th><th>Due Date</th><th>Actions</th></tr></thead>
+        <tbody id="inv-table"></tbody>
+      </table></div></div>
+    </div>
+
+    <div id="view-followups" class="view">
+      <div class="section-header">
+        <div><div class="section-title">Client Follow-ups &amp; Tracking</div><div style="font-size:12px;color:var(--muted);margin-top:2px">Track leads and client relationships</div></div>
+        <button class="btn btn-primary" id="btn-new-fu">+ Add Follow-up</button>
+      </div>
+      <div class="card"><div class="table-wrap"><table>
+        <thead><tr><th>Client</th><th>Contact</th><th>Last Contact</th><th>Next Follow-up</th><th>Status</th><th>Notes</th><th>Actions</th></tr></thead>
+        <tbody id="fu-table"></tbody>
+      </table></div></div>
+    </div>
+
+    <div id="view-contracts" class="view">
+      <div class="section-header">
+        <div><div class="section-title">Contracts</div><div style="font-size:12px;color:var(--muted);margin-top:2px">Client agreements</div></div>
+        <button class="btn btn-primary" id="btn-new-con">+ New Contract</button>
+      </div>
+      <div class="card"><div class="table-wrap"><table>
+        <thead><tr><th>ID</th><th>Client</th><th>Project</th><th>Value (KES)</th><th>Start</th><th>End</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="con-table"></tbody>
+      </table></div></div>
+    </div>
+
+    <div id="view-cms" class="view">
+      <div class="section-header">
+        <div class="section-title">Content Management</div>
+        <button class="btn btn-primary" id="btn-new-cms">+ New Page</button>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card blue"><div class="stat-label">Total Pages</div><div class="stat-value" id="cms-tot">0</div></div>
+        <div class="stat-card green"><div class="stat-label">Published</div><div class="stat-value" id="cms-pub">0</div></div>
+        <div class="stat-card orange"><div class="stat-label">Drafts</div><div class="stat-value" id="cms-dra">0</div></div>
+      </div>
+      <div class="card"><div class="table-wrap"><table>
+        <thead><tr><th>Page Title</th><th>Slug</th><th>Status</th><th>Last Updated</th><th>Actions</th></tr></thead>
+        <tbody id="cms-table"></tbody>
+      </table></div></div>
+    </div>
+
+    <div id="view-messages" class="view">
+      <div class="section-title" style="margin-bottom:16px">Client Messages</div>
+      <div style="display:grid;grid-template-columns:280px 1fr;gap:16px;height:calc(100vh - 160px)">
+        <div class="card" style="overflow-y:auto;height:100%;margin:0">
+          <div style="padding:12px 16px;border-bottom:1px solid var(--border);font-size:13px;font-weight:700">Inbox <span id="unread-badge" style="background:var(--orange);color:#fff;border-radius:10px;padding:1px 7px;font-size:10px;font-weight:700;margin-left:6px;display:none"></span></div>
+          <div id="msg-list"></div>
+        </div>
+        <div class="card" style="display:flex;flex-direction:column;height:100%;margin:0">
+          <div id="msg-hdr" style="padding:16px 20px;border-bottom:1px solid var(--border)"></div>
+          <div id="msg-body" style="flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px"></div>
+          <div style="padding:16px;border-top:1px solid var(--border);display:flex;gap:10px">
+            <input id="msg-inp" placeholder="Type a reply..."/>
+            <button class="btn btn-primary" id="btn-send">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="view-analytics" class="view">
+      <div class="section-title" style="margin-bottom:20px">Analytics Overview</div>
+      <div class="stat-grid">
+        <div class="stat-card orange"><div class="stat-label">Total Revenue</div><div class="stat-value" id="an-rev">-</div><div class="stat-sub">Paid invoices</div></div>
+        <div class="stat-card green"><div class="stat-label">Paid Invoices</div><div class="stat-value" id="an-paid">-</div></div>
+        <div class="stat-card red"><div class="stat-label">Overdue</div><div class="stat-value" id="an-ov">-</div></div>
+        <div class="stat-card blue"><div class="stat-label">Win Rate</div><div class="stat-value" id="an-win">-</div></div>
+        <div class="stat-card purple"><div class="stat-label">Avg Deal</div><div class="stat-value" id="an-avg">-</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div class="card"><div style="padding:14px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:14px">Revenue by Month (KES)</div>
+          <div style="padding:20px"><div class="chart-bar-wrap" id="an-chart" style="height:120px"></div><div class="chart-labels" id="an-labels"></div></div>
+        </div>
+        <div class="card"><div style="padding:14px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:14px">Lead Pipeline</div>
+          <div id="pipeline" style="padding:16px 20px"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="view-settings" class="view">
+      <div class="section-title" style="margin-bottom:20px">Settings</div>
+      <div style="max-width:560px">
+        <div class="card" style="padding:24px;margin-bottom:20px">
+          <div style="font-weight:700;font-size:15px;margin-bottom:20px">Agency Details</div>
+          <div class="form-group"><label>Agency Name</label><input value="URDIGIX Digital Agency"/></div>
+          <div class="form-group"><label>Email</label><input value="urdigix@gmail.com"/></div>
+          <div class="form-group"><label>Phone</label><input value="+91 8142908550"/></div>
+          <div class="form-group"><label>Website</label><input value="https://urdigix.com"/></div>
+          <div class="form-group"><label>Address</label><textarea rows="2">Hyderabad, India</textarea></div>
+          <button class="btn btn-primary" id="btn-save-set">Save Changes</button>
+        </div>
+        <div class="card" style="padding:24px">
+          <div style="font-weight:700;font-size:15px;margin-bottom:20px">Account Security</div>
+          <div class="form-group"><label>Username</label><input value="admin"/></div>
+          <div class="form-group"><label>New Password</label><input type="password" placeholder="Leave blank to keep current"/></div>
+          <button class="btn btn-primary" id="btn-save-pwd">Update Password</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="q-modal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title" id="q-modal-title">New Quotation</div><button class="modal-close" data-close="q-modal">&#215;</button></div>
+    <div class="form-row"><div class="form-group"><label>Client Name</label><input id="qf-client" placeholder="Acme Corp"/></div><div class="form-group"><label>Email</label><input id="qf-email" type="email"/></div></div>
+    <div class="form-row">
+      <div class="form-group"><label>Service</label><select id="qf-svc"><option>Website Development</option><option>Social Media Management</option><option>Meta &amp; Google Ads</option><option>Video Production</option><option>Email Marketing</option><option>WhatsApp Marketing</option><option>Brand Identity</option><option>SEO Package</option><option>Full Digital Package</option></select></div>
+      <div class="form-group"><label>Due Date</label><input id="qf-due" type="date"/></div>
+    </div>
+    <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Line Items</div>
+    <div class="line-items" id="qf-items"><div class="line-item"><input placeholder="Description" class="li-d"/><input type="number" placeholder="Qty" class="li-q" value="1"/><input type="number" placeholder="Price (KES)" class="li-p"/><button class="li-remove">&#215;</button></div></div>
+    <button class="btn btn-ghost btn-sm" id="add-qli" style="margin-bottom:16px">+ Add Line Item</button>
+    <div class="form-row"><div class="form-group"><label>Discount (%)</label><input id="qf-disc" type="number" value="0" min="0" max="100"/></div><div class="form-group"><label>Status</label><select id="qf-stat"><option>Draft</option><option>Sent</option><option>Accepted</option><option>Rejected</option></select></div></div>
+    <div class="form-group"><label>Notes</label><textarea id="qf-notes" placeholder="Additional notes..."></textarea></div>
+    <div class="form-actions"><button class="btn btn-ghost" data-close="q-modal">Cancel</button><button class="btn btn-primary" id="btn-sq">Save Quotation</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="inv-modal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">New Invoice</div><button class="modal-close" data-close="inv-modal">&#215;</button></div>
+    <div class="form-row"><div class="form-group"><label>Client Name</label><input id="if-client" placeholder="Acme Corp"/></div><div class="form-group"><label>Email</label><input id="if-email" type="email"/></div></div>
+    <div class="form-row"><div class="form-group"><label>Service</label><select id="if-svc"><option>Website Development</option><option>Social Media Management</option><option>Meta &amp; Google Ads</option><option>Video Production</option><option>Email Marketing</option><option>Brand Identity</option><option>Full Digital Package</option></select></div><div class="form-group"><label>Due Date</label><input id="if-due" type="date"/></div></div>
+    <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Line Items</div>
+    <div class="line-items" id="if-items"><div class="line-item"><input placeholder="Description" class="li-d"/><input type="number" placeholder="Qty" class="li-q" value="1"/><input type="number" placeholder="Price (KES)" class="li-p"/><button class="li-remove">&#215;</button></div></div>
+    <button class="btn btn-ghost btn-sm" id="add-ili" style="margin-bottom:16px">+ Add Line Item</button>
+    <div class="form-row"><div class="form-group"><label>Discount (%)</label><input id="if-disc" type="number" value="0" min="0" max="100"/></div><div class="form-group"><label>Status</label><select id="if-stat"><option>Unpaid</option><option>Paid</option><option>Overdue</option></select></div></div>
+    <div class="form-group"><label>Notes</label><textarea id="if-notes" placeholder="Payment terms..."></textarea></div>
+    <div class="form-actions"><button class="btn btn-ghost" data-close="inv-modal">Cancel</button><button class="btn btn-primary" id="btn-si">Save Invoice</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="fu-modal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Add / Edit Follow-up</div><button class="modal-close" data-close="fu-modal">&#215;</button></div>
+    <div class="form-row"><div class="form-group"><label>Client Name</label><input id="fuf-client" placeholder="Full Name"/></div><div class="form-group"><label>Contact</label><input id="fuf-contact" placeholder="email or phone"/></div></div>
+    <div class="form-row"><div class="form-group"><label>Last Contact</label><input id="fuf-last" type="date"/></div><div class="form-group"><label>Next Follow-up</label><input id="fuf-next" type="date"/></div></div>
+    <div class="form-group"><label>Status</label><select id="fuf-stat"><option>New Lead</option><option>In Progress</option><option>Proposal Sent</option><option>Negotiating</option><option>Closed Won</option><option>Closed Lost</option></select></div>
+    <div class="form-group"><label>Notes</label><textarea id="fuf-notes" placeholder="Meeting notes, next actions..."></textarea></div>
+    <div class="form-actions"><button class="btn btn-ghost" data-close="fu-modal">Cancel</button><button class="btn btn-primary" id="btn-sfu">Save</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="con-modal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">New Contract</div><button class="modal-close" data-close="con-modal">&#215;</button></div>
+    <div class="form-row"><div class="form-group"><label>Client Name</label><input id="cf-client" placeholder="Company / Full Name"/></div><div class="form-group"><label>Client Email</label><input id="cf-email" type="email"/></div></div>
+    <div class="form-group"><label>Project Name</label><input id="cf-project" placeholder="e.g. Full Website Redesign"/></div>
+    <div class="form-row"><div class="form-group"><label>Value (KES)</label><input id="cf-value" type="number" placeholder="0"/></div><div class="form-group"><label>Status</label><select id="cf-stat"><option>Draft</option><option>Active</option><option>Completed</option><option>Cancelled</option></select></div></div>
+    <div class="form-row"><div class="form-group"><label>Start Date</label><input id="cf-start" type="date"/></div><div class="form-group"><label>End Date</label><input id="cf-end" type="date"/></div></div>
+    <div class="form-group"><label>Scope of Work</label><textarea id="cf-scope" placeholder="Describe deliverables..." rows="3"></textarea></div>
+    <div class="form-group"><label>Payment Terms</label><textarea id="cf-terms" placeholder="e.g. 50% upfront..." rows="2"></textarea></div>
+    <div class="form-actions"><button class="btn btn-ghost" data-close="con-modal">Cancel</button><button class="btn btn-primary" id="btn-sc">Save Contract</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="cms-modal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">New Page</div><button class="modal-close" data-close="cms-modal">&#215;</button></div>
+    <div class="form-group"><label>Page Title</label><input id="cmf-title" placeholder="e.g. Services"/></div>
+    <div class="form-group"><label>Slug</label><input id="cmf-slug" placeholder="/services"/></div>
+    <div class="form-group"><label>Status</label><select id="cmf-stat"><option>Draft</option><option>Published</option></select></div>
+    <div class="form-group"><label>Content</label><textarea id="cmf-content" rows="4" placeholder="Page content..."></textarea></div>
+    <div class="form-actions"><button class="btn btn-ghost" data-close="cms-modal">Cancel</button><button class="btn btn-primary" id="btn-scms">Save Page</button></div>
+  </div>
+</div>
+
+<div id="toast" style="position:fixed;bottom:24px;right:24px;background:var(--card);border:1px solid var(--border);border-left:3px solid var(--orange);border-radius:10px;padding:12px 20px;font-size:13px;font-weight:500;z-index:9999;transform:translateY(80px);opacity:0;transition:.3s;max-width:320px;pointer-events:none"></div>
+<div id="pdf-print"></div>
+
+<script>
+const g = id => document.getElementById(id);
+const today = () => new Date().toISOString().split('T')[0];
+const kes = n => 'KES ' + Number(n).toLocaleString();
+const fd = d => d ? new Date(d+'T12:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}) : '-';
+const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const MREV=[42000,58000,35000,91000,74000,108000,67000,89000,145000,112000,95000,138000];
+
+let QQ=[
+  {id:'Q-001',client:'Nairobi Tech Hub',email:'info@nairobtech.co.ke',svc:'Website Development',amt:85000,stat:'Accepted',date:'2025-05-12',due:'2025-05-30',notes:'5-page site + hosting',items:[{d:'Website Design',q:1,p:70000},{d:'Domain Setup',q:1,p:15000}],disc:0},
+  {id:'Q-002',client:'Safari Ventures Ltd',email:'ceo@safariventures.co.ke',svc:'Full Digital Package',amt:150000,stat:'Sent',date:'2025-06-01',due:'2025-06-20',notes:'6-month retainer',items:[{d:'Social Media 6mo',q:6,p:20000},{d:'Google Ads Setup',q:1,p:30000}],disc:5},
+  {id:'Q-003',client:'Bloom Florist',email:'hello@bloom.co.ke',svc:'Social Media Management',amt:24000,stat:'Draft',date:'2025-06-10',due:'2025-06-25',notes:'',items:[{d:'Monthly Management',q:3,p:8000}],disc:0},
+  {id:'Q-004',client:'KCB Properties',email:'marketing@kcbprop.co.ke',svc:'Meta & Google Ads',amt:45000,stat:'Rejected',date:'2025-04-20',due:'2025-05-05',notes:'Budget concern',items:[{d:'Ads Management',q:3,p:15000}],disc:0},
+  {id:'Q-005',client:'Savannah Safaris',email:'ops@savannahsafaris.co.ke',svc:'Video Production',amt:67000,stat:'Accepted',date:'2025-06-15',due:'2025-07-01',notes:'2 promo videos',items:[{d:'Video Production',q:2,p:30000},{d:'Scripting',q:2,p:3500}],disc:0},
+];
+let II=[
+  {id:'INV-001',client:'Nairobi Tech Hub',email:'info@nairobtech.co.ke',svc:'Website Development',amt:85000,stat:'Paid',due:'2025-05-30',notes:''},
+  {id:'INV-002',client:'Savannah Safaris',email:'ops@savannahsafaris.co.ke',svc:'Video Production',amt:67000,stat:'Unpaid',due:'2025-07-01',notes:'Awaiting transfer'},
+  {id:'INV-003',client:'MamaAfrica Foods',email:'orders@mamaafrica.co.ke',svc:'Brand Identity',amt:35000,stat:'Overdue',due:'2025-05-15',notes:'Follow up required'},
+  {id:'INV-004',client:'TechBridge Kenya',email:'hello@techbridge.co.ke',svc:'SEO Package',amt:18000,stat:'Paid',due:'2025-06-05',notes:''},
+  {id:'INV-005',client:'Bloom Florist',email:'hello@bloom.co.ke',svc:'Social Media Management',amt:24000,stat:'Unpaid',due:'2025-07-10',notes:'First payment'},
+];
+let FU=[
+  {id:1,client:'Westgate Developers',contact:'george@westgate.co.ke',last:'2025-06-20',next:'2025-06-28',stat:'Negotiating',notes:'Full website + ads package discussion.'},
+  {id:2,client:'Mama Mboga Market',contact:'+254712345678',last:'2025-06-15',next:'2025-06-22',stat:'Proposal Sent',notes:'Social media proposal sent.'},
+  {id:3,client:'Naivasha Resorts',contact:'reservations@naivasha.co.ke',last:'2025-05-30',next:'2025-06-10',stat:'New Lead',notes:'Needs branding + website.'},
+  {id:4,client:'EduPath Kenya',contact:'cto@edupathke.com',last:'2025-06-18',next:'2025-06-30',stat:'In Progress',notes:'Reviewing portfolio.'},
+  {id:5,client:'GreenLeaf Organics',contact:'sales@greenleaf.co.ke',last:'2025-06-01',next:'2025-06-12',stat:'Closed Won',notes:'Contract signed.'},
+  {id:6,client:'Apex Motors',contact:'apexmotors@gmail.com',last:'2025-05-10',next:'2025-05-25',stat:'Closed Lost',notes:'Went with cheaper provider.'},
+];
+let CO=[
+  {id:'CON-001',client:'Nairobi Tech Hub',email:'info@nairobtech.co.ke',proj:'Corporate Website Redesign',val:85000,start:'2025-05-15',end:'2025-07-15',stat:'Active',scope:'5-page website, mobile responsive, CMS, 1 month support',terms:'50% upfront, 50% on delivery'},
+  {id:'CON-002',client:'Savannah Safaris',email:'ops@savannahsafaris.co.ke',proj:'Brand Video Production',val:67000,start:'2025-06-01',end:'2025-06-30',stat:'Active',scope:'2x 90-sec promo videos, scripting, voiceover, motion graphics',terms:'100% upfront required'},
+  {id:'CON-003',client:'GreenLeaf Organics',email:'sales@greenleaf.co.ke',proj:'Social Media 6-Month Retainer',val:108000,start:'2025-01-01',end:'2025-06-30',stat:'Completed',scope:'IG, FB, TikTok - 4 posts/week, monthly analytics',terms:'KES 18,000/month billed on 1st'},
+  {id:'CON-004',client:'Bloom Florist',email:'hello@bloom.co.ke',proj:'Social Media Management',val:24000,start:'2025-06-01',end:'2025-08-31',stat:'Active',scope:'3-month social media package',terms:'KES 8,000/month payable monthly'},
+  {id:'CON-005',client:'MamaAfrica Foods',email:'orders@mamaafrica.co.ke',proj:'Brand Identity Design',val:35000,start:'2025-04-01',end:'2025-04-30',stat:'Completed',scope:'Logo, colors, typography, biz card, letterhead',terms:'Full payment upfront'},
+];
+let CMS=[
+  {id:1,title:'Home',slug:'/',stat:'Published',upd:'2025-06-20'},
+  {id:2,title:'Services',slug:'/services',stat:'Published',upd:'2025-06-18'},
+  {id:3,title:'About Us',slug:'/about',stat:'Published',upd:'2025-06-10'},
+  {id:4,title:'Portfolio',slug:'/portfolio',stat:'Published',upd:'2025-06-05'},
+  {id:5,title:'Contact',slug:'/contact',stat:'Published',upd:'2025-06-15'},
+  {id:6,title:'Blog',slug:'/blog',stat:'Draft',upd:'2025-06-22'},
+  {id:7,title:'Pricing',slug:'/pricing',stat:'Published',upd:'2025-06-01'},
+  {id:8,title:'Case Studies',slug:'/case-studies',stat:'Draft',upd:'2025-06-25'},
+];
+const MSGS=[
+  {id:1,from:'Westgate Developers',email:'george@westgate.co.ke',unread:true,thread:[{s:'c',t:'Hi, we loved the quotation. Can we schedule a call tomorrow?',ts:'10:23 AM'},{s:'m',t:'Of course! Available 2pm-5pm. Does 3pm work?',ts:'11:05 AM'},{s:'c',t:'3pm is perfect. Talk then!',ts:'11:10 AM'}]},
+  {id:2,from:'EduPath Kenya',email:'cto@edupathke.com',unread:true,thread:[{s:'c',t:'Can you share your portfolio for mobile app design?',ts:'Yesterday'},{s:'m',t:'Absolutely! Here: urdigix.com/portfolio',ts:'Yesterday'}]},
+  {id:3,from:'Bloom Florist',email:'hello@bloom.co.ke',unread:true,thread:[{s:'c',t:'Invoice received, will pay by end of week.',ts:'2 days ago'}]},
+  {id:4,from:'Savannah Safaris',email:'ops@savannahsafaris.co.ke',unread:false,thread:[{s:'m',t:'Video deliverables ready. Please review.',ts:'3 days ago'},{s:'c',t:'Looks amazing! Approved. Please send invoice.',ts:'3 days ago'}]},
+];
+let activeMsg=0;
+
+// NAV
+document.querySelectorAll('.nav-item').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const v=btn.dataset.view;
+    document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
+    document.getElementById('view-'+v).classList.add('active');
+    btn.classList.add('active');
+    g('page-title').textContent=btn.dataset.title;
+    ({dashboard:rDash,quotations:rQ,invoices:rI,followups:rFU,contracts:rCO,cms:rCMS,messages:rMSG,analytics:rAN})[v]?.();
+  });
+});
+
+function openM(id){g(id).classList.add('show')}
+function closeM(id){g(id).classList.remove('show')}
+document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>closeM(b.dataset.close)));
+document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show')}));
+
+function mkLI(cont){
+  const d=document.createElement('div');d.className='line-item';
+  d.innerHTML='<input placeholder="Description" class="li-d"/><input type="number" placeholder="Qty" class="li-q" value="1" min="1"/><input type="number" placeholder="Price (KES)" class="li-p" min="0"/><button class="li-remove">&#215;</button>';
+  d.querySelector('.li-remove').addEventListener('click',()=>d.remove());
+  g(cont).appendChild(d);
+}
+function getLI(cont){
+  return [...document.querySelectorAll('#'+cont+' .line-item')].map(r=>({d:r.querySelector('.li-d').value.trim(),q:parseFloat(r.querySelector('.li-q').value)||1,p:parseFloat(r.querySelector('.li-p').value)||0})).filter(x=>x.d||x.p);
+}
+function calcT(items,disc){const s=items.reduce((a,i)=>a+i.q*i.p,0);return s-(s*disc/100)}
+document.querySelectorAll('.li-remove').forEach(b=>b.addEventListener('click',()=>b.parentElement.remove()));
+g('add-qli').addEventListener('click',()=>mkLI('qf-items'));
+g('add-ili').addEventListener('click',()=>mkLI('if-items'));
+
+function bdg(s){return '<span class="badge badge-'+s.toLowerCase().replace(/\s+/g,'-').replace(/[&]/g,'')+'">'+s+'</span>'}
+
+function toast(msg){const t=g('toast');t.textContent=msg;t.style.transform='translateY(0)';t.style.opacity='1';clearTimeout(t._t);t._t=setTimeout(()=>{t.style.transform='translateY(80px)';t.style.opacity='0'},3000)}
+
+function drawC(cid,lid,data,h){const mx=Math.max(...data);g(cid).innerHTML=data.map((v,i)=>'<div class="chart-bar" style="height:'+Math.max(8,Math.round(v/mx*h))+'px" data-val="'+kes(v)+'" title="'+MONTHS[i]+'"></div>').join('');g(lid).innerHTML=MONTHS.map(m=>'<span>'+m+'</span>').join('')}
+
+function rDash(){
+  const paid=II.filter(i=>i.stat==='Paid').reduce((s,i)=>s+i.amt,0);
+  const pend=II.filter(i=>i.stat!=='Paid').reduce((s,i)=>s+i.amt,0);
+  const cls=new Set([...QQ.map(q=>q.client),...II.map(i=>i.client)]).size;
+  g('dash-stats').innerHTML=[
+    {c:'orange',l:'Total Clients',v:cls,s:'Unique clients'},
+    {c:'green',l:'Paid Revenue',v:kes(paid),s:'From paid invoices',sm:1},
+    {c:'blue',l:'Active Quotations',v:QQ.filter(q=>q.stat==='Sent').length,s:'Awaiting response'},
+    {c:'red',l:'Pending Amount',v:kes(pend),s:'Unpaid + Overdue',sm:1},
+    {c:'purple',l:'Active Contracts',v:CO.filter(c=>c.stat==='Active').length,s:'Ongoing projects'},
+  ].map(x=>'<div class="stat-card '+x.c+'"><div class="stat-label">'+x.l+'</div><div class="stat-value"'+(x.sm?' style="font-size:18px"':'')+'>'+x.v+'</div><div class="stat-sub">'+x.s+'</div></div>').join('');
+  drawC('rev-chart','rev-labels',MREV,80);
+  g('activity-list').innerHTML=[
+    {col:'var(--green)',t:'Invoice INV-001 marked Paid – KES 85,000',ts:'2 hours ago'},
+    {col:'var(--orange)',t:'Quotation sent to Safari Ventures Ltd',ts:'5 hours ago'},
+    {col:'var(--blue)',t:'Follow-up scheduled: EduPath Kenya',ts:'Yesterday'},
+    {col:'var(--purple)',t:'Contract signed: GreenLeaf Organics',ts:'2 days ago'},
+    {col:'var(--red)',t:'Invoice INV-003 is now Overdue',ts:'3 days ago'},
+  ].map(a=>'<div class="activity-item"><div class="activity-dot" style="background:'+a.col+'"></div><div><div class="activity-text">'+a.t+'</div><div class="activity-time">'+a.ts+'</div></div></div>').join('');
+  g('dash-quotes').innerHTML=QQ.slice(0,5).map(q=>'<tr><td>'+q.client+'</td><td>'+kes(q.amt)+'</td><td>'+bdg(q.stat)+'</td></tr>').join('');
+  const now=new Date();
+  g('dash-fu').innerHTML=FU.slice(0,5).map(f=>{const late=new Date(f.next+'T12:00:00')<now&&f.stat!=='Closed Won'&&f.stat!=='Closed Lost';return '<tr><td>'+f.client+'</td><td style="color:'+(late?'var(--red)':'inherit')+'">'+(late?'&#9888; ':'')+fd(f.next)+'</td><td>'+bdg(f.stat)+'</td></tr>'}).join('');
+}
+
+function rQ(){
+  g('q-table').innerHTML=QQ.map((q,i)=>'<tr><td style="color:var(--muted);font-family:monospace;font-size:12px">'+q.id+'</td><td><div style="font-weight:600">'+q.client+'</div><div style="font-size:11px;color:var(--muted)">'+q.email+'</div></td><td>'+q.svc+'</td><td style="font-weight:700">'+kes(q.amt)+'</td><td><select style="background:transparent;border:1px solid var(--border);color:var(--text);border-radius:6px;padding:3px 6px;font-size:12px;cursor:pointer" data-qi="'+i+'" class="qs-sel">'+['Draft','Sent','Accepted','Rejected'].map(s=>'<option'+(q.stat===s?' selected':'')+'>'+s+'</option>').join('')+'</select></td><td style="color:var(--muted);font-size:12px">'+fd(q.date)+'</td><td><div style="display:flex;gap:5px;flex-wrap:wrap"><button class="btn btn-ghost btn-sm" onclick="viewQ('+i+')">View</button><button class="btn btn-ghost btn-sm" onclick="editQ('+i+')">Edit</button><button class="btn btn-blue btn-sm" onclick="sendQ('+i+')">Send</button><button class="btn btn-red btn-sm" onclick="delQ('+i+')">Del</button></div></td></tr>').join('');
+  document.querySelectorAll('.qs-sel').forEach(s=>s.addEventListener('change',()=>{QQ[s.dataset.qi].stat=s.value;toast('Status updated')}));
+}
+function viewQ(i){const q=QQ[i];const s=q.items.reduce((a,x)=>a+x.q*x.p,0);const d=s*q.disc/100;alert('QUOTATION '+q.id+'\n\nClient: '+q.client+' <'+q.email+'>\nService: '+q.svc+'\nDate: '+fd(q.date)+' | Due: '+fd(q.due)+'\n\nItems:\n'+q.items.map(x=>'  '+x.d+' x'+x.q+' = KES '+(x.q*x.p).toLocaleString()).join('\n')+'\n\nSubtotal: KES '+s.toLocaleString()+'\nDiscount ('+q.disc+'%): -KES '+d.toLocaleString()+'\nTotal: '+kes(q.amt)+'\n\nNotes: '+(q.notes||'-'))}
+function sendQ(i){QQ[i].stat='Sent';rQ();toast('Quote sent to '+QQ[i].client)}
+function delQ(i){if(confirm('Delete?')){QQ.splice(i,1);rQ();toast('Deleted')}}
+function editQ(i){
+  const q=QQ[i];
+  g('qf-client').value=q.client;g('qf-email').value=q.email;g('qf-svc').value=q.svc;g('qf-due').value=q.due;g('qf-disc').value=q.disc;g('qf-stat').value=q.stat;g('qf-notes').value=q.notes;
+  const c=g('qf-items');c.innerHTML='';
+  q.items.forEach(it=>{const d=document.createElement('div');d.className='line-item';d.innerHTML='<input placeholder="Description" class="li-d" value="'+it.d+'"/><input type="number" class="li-q" value="'+it.q+'"/><input type="number" class="li-p" value="'+it.p+'"/><button class="li-remove">&#215;</button>';d.querySelector('.li-remove').addEventListener('click',()=>d.remove());c.appendChild(d)});
+  g('q-modal-title').textContent='Edit Quotation';g('q-modal').dataset.ei=i;openM('q-modal');
+}
+g('btn-new-q').addEventListener('click',()=>{
+  g('q-modal-title').textContent='New Quotation';delete g('q-modal').dataset.ei;
+  ['qf-client','qf-email','qf-due','qf-notes'].forEach(id=>g(id).value='');g('qf-disc').value=0;g('qf-stat').value='Draft';
+  const c=g('qf-items');c.innerHTML='<div class="line-item"><input placeholder="Description" class="li-d"/><input type="number" placeholder="Qty" class="li-q" value="1"/><input type="number" placeholder="Price (KES)" class="li-p"/><button class="li-remove">&#215;</button></div>';
+  c.querySelector('.li-remove').addEventListener('click',function(){this.parentElement.remove()});
+  openM('q-modal');
+});
+g('btn-sq').addEventListener('click',()=>{
+  const idx=g('q-modal').dataset.ei;const items=getLI('qf-items');const disc=parseFloat(g('qf-disc').value)||0;const amt=Math.round(calcT(items,disc));
+  const q={id:idx!=null?QQ[+idx].id:'Q-'+String(QQ.length+1).padStart(3,'0'),client:g('qf-client').value||'Unknown',email:g('qf-email').value,svc:g('qf-svc').value,amt,disc,items,stat:g('qf-stat').value,date:today(),due:g('qf-due').value,notes:g('qf-notes').value};
+  if(idx!=null)QQ[+idx]=q;else QQ.unshift(q);closeM('q-modal');rQ();toast('Quotation saved!');
+});
+
+function rI(){
+  g('inv-table').innerHTML=II.map((inv,i)=>'<tr><td style="color:var(--muted);font-family:monospace;font-size:12px">'+inv.id+'</td><td><div style="font-weight:600">'+inv.client+'</div><div style="font-size:11px;color:var(--muted)">'+inv.email+'</div></td><td>'+inv.svc+'</td><td style="font-weight:700">'+kes(inv.amt)+'</td><td>'+bdg(inv.stat)+'</td><td style="color:'+(inv.stat==='Overdue'?'var(--red)':'var(--muted)')+'">'+fd(inv.due)+'</td><td><div style="display:flex;gap:5px;flex-wrap:wrap">'+(inv.stat!=='Paid'?'<button class="btn btn-green btn-sm" onclick="markPaid('+i+')">&#10003; Paid</button>':'')+'<button class="btn btn-blue btn-sm" onclick="dlPDF('+i+')">&#8595; PDF</button><button class="btn btn-red btn-sm" onclick="delI('+i+')">Del</button></div></td></tr>').join('');
+}
+function markPaid(i){II[i].stat='Paid';rI();toast('Invoice marked Paid!')}
+function delI(i){if(confirm('Delete?')){II.splice(i,1);rI();toast('Deleted')}}
+g('btn-new-inv').addEventListener('click',()=>{['if-client','if-email','if-due','if-notes'].forEach(id=>g(id).value='');g('if-disc').value=0;g('if-stat').value='Unpaid';const c=g('if-items');c.innerHTML='<div class="line-item"><input placeholder="Description" class="li-d"/><input type="number" class="li-q" value="1"/><input type="number" placeholder="Price (KES)" class="li-p"/><button class="li-remove">&#215;</button></div>';c.querySelector('.li-remove').addEventListener('click',function(){this.parentElement.remove()});openM('inv-modal')});
+g('btn-si').addEventListener('click',()=>{const items=getLI('if-items');const disc=parseFloat(g('if-disc').value)||0;const amt=Math.round(calcT(items,disc));II.unshift({id:'INV-'+String(II.length+1).padStart(3,'0'),client:g('if-client').value||'Unknown',email:g('if-email').value,svc:g('if-svc').value,amt,stat:g('if-stat').value,due:g('if-due').value,notes:g('if-notes').value});closeM('inv-modal');rI();toast('Invoice created!')});
+function dlPDF(i){const inv=II[i];g('pdf-print').innerHTML='<div class="pdf-c" style="font-family:Arial,sans-serif"><h1 style="color:#f97316">INVOICE</h1><p class="sub">URDIGIX Digital Agency &mdash; urdigix.com</p><hr style="margin:20px 0"/><div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-bottom:24px"><div><strong>FROM</strong><br/>URDIGIX Digital Agency<br/>Hyderabad, India<br/>urdigix@gmail.com | +91 8142908550</div><div><strong>BILLED TO</strong><br/>'+inv.client+'<br/>'+inv.email+'</div></div><table><tr><th>Invoice No</th><th>Service</th><th>Due Date</th><th>Status</th></tr><tr><td>'+inv.id+'</td><td>'+inv.svc+'</td><td>'+fd(inv.due)+'</td><td>'+inv.stat+'</td></tr></table><br/><table><tr><th>Description</th><th>Amount (KES)</th></tr><tr><td>'+inv.svc+'</td><td>'+inv.amt.toLocaleString()+'</td></tr><tr><td><strong>TOTAL</strong></td><td><strong>'+inv.amt.toLocaleString()+'</strong></td></tr></table><p style="margin-top:20px;font-size:13px;color:#666">Notes: '+(inv.notes||'Thank you for your business!')+'</p><div class="sig-grid"><div class="sig-box">Client Signature<br/>Date: _______________</div><div class="sig-box">Authorized (URDIGIX)<br/>Date: _______________</div></div></div>';g('pdf-print').style.display='block';window.print();setTimeout(()=>{g('pdf-print').style.display='none';g('pdf-print').innerHTML=''},1000)}
+
+function rFU(){
+  const now=new Date();
+  g('fu-table').innerHTML=FU.map((f,i)=>{const late=new Date(f.next+'T12:00:00')<now&&f.stat!=='Closed Won'&&f.stat!=='Closed Lost';return '<tr'+(late?' class="overdue"':'')+'><td><div style="font-weight:600">'+f.client+'</div>'+(late?'<div style="font-size:10px;color:var(--red);font-weight:600">&#9888; OVERDUE</div>':'')+'</td><td style="font-size:12px;color:var(--muted)">'+f.contact+'</td><td style="color:var(--muted);font-size:12px">'+fd(f.last)+'</td><td style="color:'+(late?'var(--red)':'inherit')+';font-weight:'+(late?700:400)+'">'+fd(f.next)+'</td><td>'+bdg(f.stat)+'</td><td style="max-width:180px;font-size:12px;color:var(--muted)">'+f.notes+'</td><td><div style="display:flex;gap:5px"><button class="btn btn-ghost btn-sm" onclick="editFU('+i+')">Edit</button><button class="btn btn-red btn-sm" onclick="delFU('+i+')">Del</button></div></td></tr>'}).join('');
+}
+function editFU(i){const f=FU[i];g('fuf-client').value=f.client;g('fuf-contact').value=f.contact;g('fuf-last').value=f.last;g('fuf-next').value=f.next;g('fuf-stat').value=f.stat;g('fuf-notes').value=f.notes;g('fu-modal').dataset.ei=i;openM('fu-modal')}
+function delFU(i){if(confirm('Delete?')){FU.splice(i,1);rFU();toast('Deleted')}}
+g('btn-new-fu').addEventListener('click',()=>{['fuf-client','fuf-contact','fuf-last','fuf-next','fuf-notes'].forEach(id=>g(id).value='');g('fuf-stat').value='New Lead';delete g('fu-modal').dataset.ei;openM('fu-modal')});
+g('btn-sfu').addEventListener('click',()=>{const idx=g('fu-modal').dataset.ei;const f={id:Date.now(),client:g('fuf-client').value||'Unknown',contact:g('fuf-contact').value,last:g('fuf-last').value,next:g('fuf-next').value,stat:g('fuf-stat').value,notes:g('fuf-notes').value};if(idx!=null)FU[+idx]=f;else FU.unshift(f);closeM('fu-modal');rFU();toast('Follow-up saved!')});
+
+function rCO(){
+  g('con-table').innerHTML=CO.map((c,i)=>'<tr><td style="color:var(--muted);font-family:monospace;font-size:12px">'+c.id+'</td><td><div style="font-weight:600">'+c.client+'</div><div style="font-size:11px;color:var(--muted)">'+c.email+'</div></td><td>'+c.proj+'</td><td style="font-weight:700">'+kes(c.val)+'</td><td style="color:var(--muted);font-size:12px">'+fd(c.start)+'</td><td style="color:var(--muted);font-size:12px">'+fd(c.end)+'</td><td>'+bdg(c.stat)+'</td><td><div style="display:flex;gap:5px"><button class="btn btn-purple btn-sm" onclick="genC('+i+')">&#8595; PDF</button><button class="btn btn-red btn-sm" onclick="delC('+i+')">Del</button></div></td></tr>').join('');
+}
+g('btn-new-con').addEventListener('click',()=>{['cf-client','cf-email','cf-project','cf-scope','cf-terms'].forEach(id=>g(id).value='');g('cf-value').value=0;g('cf-stat').value='Draft';g('cf-start').value=today();g('cf-end').value='';openM('con-modal')});
+g('btn-sc').addEventListener('click',()=>{CO.unshift({id:'CON-'+String(CO.length+1).padStart(3,'0'),client:g('cf-client').value||'Unknown',email:g('cf-email').value,proj:g('cf-project').value,val:parseFloat(g('cf-value').value)||0,stat:g('cf-stat').value,start:g('cf-start').value,end:g('cf-end').value,scope:g('cf-scope').value,terms:g('cf-terms').value});closeM('con-modal');rCO();toast('Contract saved!')});
+function delC(i){if(confirm('Delete?')){CO.splice(i,1);rCO();toast('Deleted')}}
+function genC(i){const c=CO[i];g('pdf-print').innerHTML='<div class="pdf-c"><h1>SERVICE AGREEMENT</h1><p class="sub">URDIGIX Digital Agency &times; '+c.client+'</p><h2>Parties</h2><div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-bottom:16px"><div><strong>SERVICE PROVIDER</strong><br/>URDIGIX Digital Agency<br/>Hyderabad, India<br/>urdigix@gmail.com | +91 8142908550<br/>urdigix.com</div><div><strong>CLIENT</strong><br/>'+c.client+'<br/>'+c.email+'</div></div><h2>Project Details</h2><table><tr><th>Project</th><td>'+c.proj+'</td></tr><tr><th>Value</th><td>'+kes(c.val)+'</td></tr><tr><th>Start Date</th><td>'+fd(c.start)+'</td></tr><tr><th>End Date</th><td>'+fd(c.end)+'</td></tr><tr><th>Status</th><td>'+c.stat+'</td></tr></table><h2>Scope of Work</h2><p style="font-size:14px">'+(c.scope||'As discussed and agreed.')+'</p><h2>Payment Terms</h2><p style="font-size:14px">'+(c.terms||'As agreed.')+'</p><h2>General Terms</h2><p style="font-size:13px;line-height:1.9;color:#444">1. Service Provider agrees to complete work within agreed timeline.<br/>2. Client agrees to provide necessary content and feedback promptly.<br/>3. Scope changes require written agreement and may incur additional charges.<br/>4. Service Provider retains right to showcase work in portfolio.<br/>5. Both parties agree to maintain confidentiality of proprietary information.<br/>6. Disputes resolved through good-faith negotiation before legal action.</p><h2>Signatures</h2><div class="sig-grid"><div class="sig-box"><strong>CLIENT</strong><br/>'+c.client+'<br/><br/>Signature: _______________<br/>Date: _______________</div><div class="sig-box"><strong>SERVICE PROVIDER</strong><br/>URDIGIX Digital Agency<br/><br/>Signature: _______________<br/>Date: _______________</div></div><p style="text-align:center;font-size:11px;color:#999;margin-top:40px">Generated by URDIGIX CRM &mdash; '+new Date().toLocaleDateString()+'</p></div>';g('pdf-print').style.display='block';window.print();setTimeout(()=>{g('pdf-print').style.display='none';g('pdf-print').innerHTML=''},1000)}
+
+function rCMS(){
+  g('cms-table').innerHTML=CMS.map((p,i)=>'<tr><td style="font-weight:600">'+p.title+'</td><td style="font-family:monospace;font-size:12px;color:var(--muted)">'+p.slug+'</td><td>'+bdg(p.stat)+'</td><td style="color:var(--muted);font-size:12px">'+fd(p.upd)+'</td><td><div style="display:flex;gap:5px"><button class="btn btn-ghost btn-sm" onclick="togCMS('+i+')">'+(p.stat==='Published'?'Unpublish':'Publish')+'</button><button class="btn btn-red btn-sm" onclick="delCMS('+i+')">Del</button></div></td></tr>').join('');
+  const pub=CMS.filter(p=>p.stat==='Published').length;g('cms-tot').textContent=CMS.length;g('cms-pub').textContent=pub;g('cms-dra').textContent=CMS.length-pub;
+}
+function togCMS(i){CMS[i].stat=CMS[i].stat==='Published'?'Draft':'Published';CMS[i].upd=today();rCMS();toast('Status updated')}
+function delCMS(i){if(confirm('Delete page?')){CMS.splice(i,1);rCMS();toast('Deleted')}}
+g('btn-new-cms').addEventListener('click',()=>{['cmf-title','cmf-slug','cmf-content'].forEach(id=>g(id).value='');g('cmf-stat').value='Draft';openM('cms-modal')});
+g('btn-scms').addEventListener('click',()=>{CMS.unshift({id:Date.now(),title:g('cmf-title').value||'Untitled',slug:g('cmf-slug').value||'/untitled',stat:g('cmf-stat').value,upd:today()});closeM('cms-modal');rCMS();toast('Page saved!')});
+
+function rMSG(){
+  const un=MSGS.filter(m=>m.unread).length;g('unread-badge').textContent=un;g('unread-badge').style.display=un?'inline':'none';
+  g('msg-list').innerHTML=MSGS.map((m,i)=>'<div onclick="selMsg('+i+')" style="padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;background:'+(activeMsg===i?'rgba(249,115,22,.08)':'transparent')+';transition:.15s"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px"><span style="font-weight:'+(m.unread?700:500)+';font-size:13px">'+m.from+'</span>'+(m.unread?'<span style="width:8px;height:8px;border-radius:50%;background:var(--orange);flex-shrink:0"></span>':'')+'</div><div style="font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+m.thread[m.thread.length-1].t+'</div></div>').join('');
+  rThread();
+}
+window.selMsg=function(i){activeMsg=i;MSGS[i].unread=false;rMSG()};
+function rThread(){const m=MSGS[activeMsg];g('msg-hdr').innerHTML='<div style="font-weight:700;font-size:15px">'+m.from+'</div><div style="font-size:12px;color:var(--muted)">'+m.email+'</div>';g('msg-body').innerHTML=m.thread.map(msg=>'<div style="display:flex;flex-direction:'+(msg.s==='m'?'row-reverse':'row')+';gap:10px;align-items:flex-end"><div style="background:'+(msg.s==='m'?'var(--orange)':'rgba(255,255,255,.08)')+';color:'+(msg.s==='m'?'#fff':'var(--text)')+';padding:10px 14px;border-radius:'+(msg.s==='m'?'16px 16px 4px 16px':'16px 16px 16px 4px')+';max-width:65%;font-size:13.5px;line-height:1.5">'+msg.t+'<div style="font-size:10px;opacity:.6;margin-top:4px;text-align:'+(msg.s==='m'?'right':'left')+'">'+msg.ts+'</div></div></div>').join('');g('msg-body').scrollTop=g('msg-body').scrollHeight}
+g('btn-send').addEventListener('click',()=>{const inp=g('msg-inp');if(!inp.value.trim())return;MSGS[activeMsg].thread.push({s:'m',t:inp.value,ts:'Just now'});inp.value='';rThread();toast('Message sent!')});
+g('msg-inp').addEventListener('keydown',e=>{if(e.key==='Enter')g('btn-send').click()});
+
+function rAN(){
+  const paid=II.filter(i=>i.stat==='Paid').reduce((s,i)=>s+i.amt,0);const ov=II.filter(i=>i.stat==='Overdue').length;const won=FU.filter(f=>f.stat==='Closed Won').length;const avg=II.length?Math.round(II.reduce((s,i)=>s+i.amt,0)/II.length):0;
+  g('an-rev').textContent=kes(paid);g('an-paid').textContent=II.filter(i=>i.stat==='Paid').length;g('an-ov').textContent=ov;g('an-win').textContent=Math.round(won/FU.length*100)+'%';g('an-avg').textContent=kes(avg);
+  drawC('an-chart','an-labels',MREV,120);
+  const stages=[['New Lead','var(--blue)'],['In Progress','var(--orange)'],['Proposal Sent','var(--purple)'],['Negotiating','var(--yellow)'],['Closed Won','var(--green)'],['Closed Lost','var(--red)']];
+  g('pipeline').innerHTML=stages.map(([s,col])=>{const cnt=FU.filter(f=>f.stat===s).length;const pct=Math.round(cnt/FU.length*100);return '<div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>'+s+'</span><span style="color:var(--muted)">'+cnt+' ('+pct+'%)</span></div><div style="background:rgba(255,255,255,.08);border-radius:4px;height:8px"><div style="background:'+col+';height:8px;border-radius:4px;width:'+pct+'%;transition:.5s"></div></div></div>'}).join('');
+}
+
+g('btn-save-set').addEventListener('click',()=>toast('Settings saved!'));
+g('btn-save-pwd').addEventListener('click',()=>toast('Password updated!'));
+
+g('topbar-date').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+rDash();
+</script>
+</body>
+</html>
