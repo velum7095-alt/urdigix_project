@@ -19,24 +19,37 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const isDevSession = import.meta.env.DEV && (
-    import.meta.env.VITE_DEV_ADMIN === 'true' ||
-    localStorage.getItem('dev_admin_session') === 'true'
-  );
+  // Safely read localStorage to avoid crashes during render
+  const getInitialDevSession = () => {
+    try {
+      return import.meta.env.DEV && (
+        import.meta.env.VITE_DEV_ADMIN === 'true' ||
+        localStorage.getItem('dev_admin_session') === 'true'
+      );
+    } catch {
+      return false;
+    }
+  };
 
-  const devUser = isDevSession ? {
+  const isInitialDevSession = getInitialDevSession();
+
+  const devUser = isInitialDevSession ? {
     id: 'local-dev-admin',
     email: 'admin@urdigix.local',
   } as User : null;
 
   const [user, setUser] = useState<User | null>(devUser);
   const [session, setSession] = useState<Session | null>(null);
-  const [isAdmin, setIsAdmin] = useState(isDevSession);
-  const [isLoading, setIsLoading] = useState(!isDevSession);
-  const [isDevMode, setIsDevMode] = useState(isDevSession);
+  const [isAdmin, setIsAdmin] = useState(isInitialDevSession);
+  const [isLoading, setIsLoading] = useState(!isInitialDevSession);
+  const [isDevMode, setIsDevMode] = useState(isInitialDevSession);
 
   useEffect(() => {
-    const isDevSession = localStorage.getItem('dev_admin_session') === 'true';
+    const isDevSession = (() => {
+      try {
+        return import.meta.env.DEV && (DEV_MODE || localStorage.getItem('dev_admin_session') === 'true');
+      } catch { return false; }
+    })();
     if (import.meta.env.DEV && (DEV_MODE || isDevSession)) {
       const devUser = {
         id: 'local-dev-admin',
