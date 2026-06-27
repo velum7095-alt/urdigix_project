@@ -1944,7 +1944,7 @@ function AppContent() {
   const { user } = useAuth();
   
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.DEV ? "/" : "/admin"}>
       <Routes>
         <Route path="/" element={user ? <AdminPage /> : <Navigate to="/auth" replace />} />
         <Route path="/auth" element={<LoginPage />} />

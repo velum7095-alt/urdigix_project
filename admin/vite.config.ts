@@ -9,6 +9,7 @@ import path from "path";
  * - Asset compression and caching
  */
 export default defineConfig(({ mode }) => ({
+  base: mode === "production" ? "/admin/" : "/",
   server: {
     host: "::",
     port: 8081,
