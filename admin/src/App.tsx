@@ -137,7 +137,7 @@ const fmtKES = (n: number, curr = "USD") => {
 const fmtDate = (d: string) => d ? new Date(d + 'T12:00:00').toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '-';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-const MONTHLY_REV = [42000, 58000, 35000, 91000, 74000, 108000, 67000, 89000, 145000, 112000, 95000, 138000];
+const MONTHLY_REV = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 // ─── LOGIN PAGE ───────────────────────────────────────────────────────────────
 function LoginPage() {
@@ -223,56 +223,12 @@ function AdminPage() {
   const [activeTab, setActiveTab] = useState("dashboard");
 
   // CRM Global State
-  const [quotes, setQuotes] = useState<Quotation[]>([
-    { id: 'Q-001', client: 'Nairobi Tech Hub', email: 'info@nairobtech.co.ke', svc: 'Website Development', amt: 85000, stat: 'Accepted', date: '2025-05-12', due: '2025-05-30', notes: '5-page site + hosting', items: [{ d: 'Website Design', q: 1, p: 70000 }, { d: 'Domain Setup', q: 1, p: 15000 }], disc: 0 },
-    { id: 'Q-002', client: 'Safari Ventures Ltd', email: 'ceo@safariventures.co.ke', svc: 'Full Digital Package', amt: 150000, stat: 'Sent', date: '2025-06-01', due: '2025-06-20', notes: '6-month retainer', items: [{ d: 'Social Media 6mo', q: 6, p: 20000 }, { d: 'Google Ads Setup', q: 1, p: 30000 }], disc: 5 },
-    { id: 'Q-003', client: 'Bloom Florist', email: 'hello@bloom.co.ke', svc: 'Social Media Management', amt: 24000, stat: 'Draft', date: '2025-06-10', due: '2025-06-25', notes: '', items: [{ d: 'Monthly Management', q: 3, p: 8000 }], disc: 0 },
-    { id: 'Q-004', client: 'KCB Properties', email: 'marketing@kcbprop.co.ke', svc: 'Meta & Google Ads', amt: 45000, stat: 'Rejected', date: '2025-04-20', due: '2025-05-05', notes: 'Budget concern', items: [{ d: 'Ads Management', q: 3, p: 15000 }], disc: 0 },
-    { id: 'Q-005', client: 'Savannah Safaris', email: 'ops@savannahsafaris.co.ke', svc: 'Video Production', amt: 67000, stat: 'Accepted', date: '2025-06-15', due: '2025-07-01', notes: '2 promo videos', items: [{ d: 'Video Production', q: 2, p: 30000 }, { d: 'Scripting', q: 2, p: 3500 }], disc: 0 },
-  ]);
-
-  const [invoices, setInvoices] = useState<Invoice[]>([
-    { id: 'INV-001', client: 'Nairobi Tech Hub', email: 'info@nairobtech.co.ke', svc: 'Website Development', amt: 85000, stat: 'Paid', due: '2025-05-30', notes: '' },
-    { id: 'INV-002', client: 'Savannah Safaris', email: 'ops@savannahsafaris.co.ke', svc: 'Video Production', amt: 67000, stat: 'Unpaid', due: '2025-07-01', notes: 'Awaiting transfer' },
-    { id: 'INV-003', client: 'MamaAfrica Foods', email: 'orders@mamaafrica.co.ke', svc: 'Brand Identity', amt: 35000, stat: 'Overdue', due: '2025-05-15', notes: 'Follow up required' },
-    { id: 'INV-004', client: 'TechBridge Kenya', email: 'hello@techbridge.co.ke', svc: 'SEO Package', amt: 18000, stat: 'Paid', due: '2025-06-05', notes: '' },
-    { id: 'INV-005', client: 'Bloom Florist', email: 'hello@bloom.co.ke', svc: 'Social Media Management', amt: 24000, stat: 'Unpaid', due: '2025-07-10', notes: 'First payment' },
-  ]);
-
-  const [followups, setFollowups] = useState<Followup[]>([
-    { id: 1, client: 'Westgate Developers', contact: 'george@westgate.co.ke', last: '2025-06-20', next: '2025-06-28', stat: 'Negotiating', notes: 'Full website + ads package discussion.' },
-    { id: 2, client: 'Mama Mboga Market', contact: '+254712345678', last: '2025-06-15', next: '2025-06-22', stat: 'Proposal Sent', notes: 'Social media proposal sent.' },
-    { id: 3, client: 'Naivasha Resorts', contact: 'reservations@naivasha.co.ke', last: '2025-05-30', next: '2025-06-10', stat: 'New Lead', notes: 'Needs branding + website.' },
-    { id: 4, client: 'EduPath Kenya', contact: 'cto@edupathke.com', last: '2025-06-18', next: '2025-06-30', stat: 'In Progress', notes: 'Reviewing portfolio.' },
-    { id: 5, client: 'GreenLeaf Organics', contact: 'sales@greenleaf.co.ke', last: '2025-06-01', next: '2025-06-12', stat: 'Closed Won', notes: 'Contract signed.' },
-    { id: 6, client: 'Apex Motors', contact: 'apexmotors@gmail.com', last: '2025-05-10', next: '2025-05-25', stat: 'Closed Lost', notes: 'Went with cheaper provider.' },
-  ]);
-
-  const [contracts, setContracts] = useState<Contract[]>([
-    { id: 'CON-001', client: 'Nairobi Tech Hub', email: 'info@nairobtech.co.ke', proj: 'Corporate Website Redesign', val: 85000, start: '2025-05-15', end: '2025-07-15', stat: 'Active', scope: '5-page website, mobile responsive, CMS, 1 month support', terms: '50% upfront, 50% on delivery' },
-    { id: 'CON-002', client: 'Savannah Safaris', email: 'ops@savannahsafaris.co.ke', proj: 'Brand Video Production', val: 67000, start: '2025-06-01', end: '2025-06-30', stat: 'Active', scope: '2x 90-sec promo videos, scripting, voiceover, motion graphics', terms: '100% upfront required' },
-    { id: 'CON-003', client: 'GreenLeaf Organics', email: 'sales@greenleaf.co.ke', proj: 'Social Media 6-Month Retainer', val: 108000, start: '2025-01-01', end: '2025-06-30', stat: 'Completed', scope: 'IG, FB, TikTok - 4 posts/week, monthly analytics', terms: 'KES 18,000/month billed on 1st' },
-    { id: 'CON-004', client: 'Bloom Florist', email: 'hello@bloom.co.ke', proj: 'Social Media Management', val: 24000, start: '2025-06-01', end: '2025-08-31', stat: 'Active', scope: '3-month social media package', terms: 'KES 8,000/month payable monthly' },
-    { id: 'CON-005', client: 'MamaAfrica Foods', email: 'orders@mamaafrica.co.ke', proj: 'Brand Identity Design', val: 35000, start: '2025-04-01', end: '2025-04-30', stat: 'Completed', scope: 'Logo, colors, typography, biz card, letterhead', terms: 'Full payment upfront' },
-  ]);
-
-  const [cmsPages, setCmsPages] = useState<CMSPage[]>([
-    { id: 1, title: 'Home', slug: '/', stat: 'Published', upd: '2025-06-20' },
-    { id: 2, title: 'Services', slug: '/services', stat: 'Published', upd: '2025-06-18' },
-    { id: 3, title: 'About Us', slug: '/about', stat: 'Published', upd: '2025-06-10' },
-    { id: 4, title: 'Portfolio', slug: '/portfolio', stat: 'Published', upd: '2025-06-05' },
-    { id: 5, title: 'Contact', slug: '/contact', stat: 'Published', upd: '2025-06-15' },
-    { id: 6, title: 'Blog', slug: '/blog', stat: 'Draft', upd: '2025-06-22' },
-    { id: 7, title: 'Pricing', slug: '/pricing', stat: 'Published', upd: '2025-06-01' },
-    { id: 8, title: 'Case Studies', slug: '/case-studies', stat: 'Draft', upd: '2025-06-25' },
-  ]);
-
-  const [messages, setMessages] = useState<Message[]>([
-    { id: 1, from: 'Westgate Developers', email: 'george@westgate.co.ke', unread: true, thread: [{ s: 'c', t: 'Hi, we loved the quotation. Can we schedule a call tomorrow?', ts: '10:23 AM' }, { s: 'm', t: 'Of course! Available 2pm-5pm. Does 3pm work?', ts: '11:05 AM' }, { s: 'c', t: '3pm is perfect. Talk then!', ts: '11:10 AM' }] },
-    { id: 2, from: 'EduPath Kenya', email: 'cto@edupathke.com', unread: true, thread: [{ s: 'c', t: 'Can you share your portfolio for mobile app design?', ts: 'Yesterday' }, { s: 'm', t: 'Absolutely! Here: urdigix.com/portfolio', ts: 'Yesterday' }] },
-    { id: 3, from: 'Bloom Florist', email: 'hello@bloom.co.ke', unread: true, thread: [{ s: 'c', t: 'Invoice received, will pay by end of week.', ts: '2 days ago' }] },
-    { id: 4, from: 'Savannah Safaris', email: 'ops@savannahsafaris.co.ke', unread: false, thread: [{ s: 'm', t: 'Video deliverables ready. Please review.', ts: '3 days ago' }, { s: 'c', t: 'Looks amazing! Approved. Please send invoice.', ts: '3 days ago' }] },
-  ]);
+  const [quotes, setQuotes] = useState<Quotation[]>([]);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [followups, setFollowups] = useState<Followup[]>([]);
+  const [contracts, setContracts] = useState<Contract[]>([]);
+  const [cmsPages, setCmsPages] = useState<CMSPage[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
 
   const [activeMsg, setActiveMsg] = useState(0);
 
@@ -858,7 +814,7 @@ function AdminPage() {
                   <div style={{ padding: "16px 20px" }}>
                     <div className="chart-bar-wrap">
                       {MONTHLY_REV.map((v, i) => {
-                        const mx = Math.max(...MONTHLY_REV);
+                        const mx = Math.max(...MONTHLY_REV) || 1;
                         return <div key={i} className="chart-bar" style={{ height: Math.max(8, Math.round(v / mx * 80)) }} data-val={kes(v)} title={MONTHS[i]}></div>;
                       })}
                     </div>
@@ -868,18 +824,9 @@ function AdminPage() {
                 <div className="card">
                   <div style={{ padding: "14px 20px", borderBottom: "1px solid #30363d", fontWeight: 700, fontSize: 14 }}>Recent Activity</div>
                   <div className="activity-list">
-                    {[
-                      { color: "var(--green)", text: "Invoice INV-001 marked Paid – KES 85,000", ts: "2 hours ago" },
-                      { color: "var(--orange)", text: "Quotation sent to Safari Ventures Ltd", ts: "5 hours ago" },
-                      { color: "var(--blue)", text: "Follow-up scheduled: EduPath Kenya", ts: "Yesterday" },
-                      { color: "var(--purple)", text: "Contract signed: GreenLeaf Organics", ts: "2 days ago" },
-                      { color: "var(--red)", text: "Invoice INV-003 is now Overdue", ts: "3 days ago" },
-                    ].map((a, i) => (
-                      <div key={i} className="activity-item">
-                        <div className="activity-dot" style={{ background: a.color }}></div>
-                        <div><div className="activity-text">{a.text}</div><div className="activity-time">{a.ts}</div></div>
-                      </div>
-                    ))}
+                    <div style={{ padding: "16px", textAlign: "center", color: "#8b949e", fontSize: 13.5 }}>
+                      No recent activity.
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1215,7 +1162,7 @@ function AdminPage() {
                   <div style={{ padding: "20px" }}>
                     <div className="chart-bar-wrap" style={{ height: 120 }}>
                       {MONTHLY_REV.map((v, i) => {
-                        const mx = Math.max(...MONTHLY_REV);
+                        const mx = Math.max(...MONTHLY_REV) || 1;
                         return <div key={i} className="chart-bar" style={{ height: Math.max(8, Math.round(v / mx * 120)) }} data-val={kes(v)} title={MONTHS[i]}></div>;
                       })}
                     </div>
@@ -1234,7 +1181,7 @@ function AdminPage() {
                       { s: 'Closed Lost', col: 'var(--red)' }
                     ].map(stage => {
                       const cnt = followups.filter(f => f.stat === stage.s).length;
-                      const pct = Math.round(cnt / followups.length * 100);
+                      const pct = followups.length ? Math.round(cnt / followups.length * 100) : 0;
                       return (
                         <div key={stage.s} style={{ marginBottom: 14 }}>
                           <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, marginBottom: 4 }}>
