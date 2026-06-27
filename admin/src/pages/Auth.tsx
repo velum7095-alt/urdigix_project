@@ -116,6 +116,8 @@ const Auth = () => {
           title: "Welcome!",
           description: "Successfully logged in.",
         });
+        // Navigate immediately on success, don't wait for useEffect
+        navigate('/');
       }
     } catch {
       // Record failed attempt

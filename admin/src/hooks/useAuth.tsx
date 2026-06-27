@@ -19,11 +19,21 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const isDevSession = import.meta.env.DEV && (
+    import.meta.env.VITE_DEV_ADMIN === 'true' ||
+    localStorage.getItem('dev_admin_session') === 'true'
+  );
+
+  const devUser = isDevSession ? {
+    id: 'local-dev-admin',
+    email: 'admin@urdigix.local',
+  } as User : null;
+
+  const [user, setUser] = useState<User | null>(devUser);
   const [session, setSession] = useState<Session | null>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isDevMode, setIsDevMode] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(isDevSession);
+  const [isLoading, setIsLoading] = useState(!isDevSession);
+  const [isDevMode, setIsDevMode] = useState(isDevSession);
 
   useEffect(() => {
     const isDevSession = localStorage.getItem('dev_admin_session') === 'true';
