@@ -9,7 +9,7 @@ import path from "path";
  * - Asset compression and caching
  */
 export default defineConfig(({ mode }) => ({
-  base: mode === "production" ? "/admin/" : "/",
+  base: process.env.CROSS_BUILD ? "/admin/" : "/",
   server: {
     host: "::",
     port: 8081,

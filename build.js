@@ -17,7 +17,7 @@ try {
   execSync('npm run build --workspace=frontend', { stdio: 'inherit' });
 
   console.log('Building admin CRM app...');
-  execSync('npm run build --workspace=admin', { stdio: 'inherit' });
+  execSync('npm run build --workspace=admin', { stdio: 'inherit', env: { ...process.env, CROSS_BUILD: '1' } });
 
   console.log('Creating combined dist folder...');
   fs.mkdirSync('dist', { recursive: true });
