@@ -61,7 +61,7 @@ const Auth = () => {
 
   useEffect(() => {
     if (user && !isLoading) {
-      navigate('/admin');
+      navigate('/');
     }
   }, [user, isLoading, navigate]);
 
@@ -146,7 +146,13 @@ const Auth = () => {
       >
         <Button
           variant="ghost"
-          onClick={() => navigate('/')}
+          onClick={() => {
+            if (window.location.hostname.includes('admin.')) {
+              window.location.href = window.location.origin.replace('admin.', '');
+            } else {
+              window.location.href = '/';
+            }
+          }}
           className="mb-8"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />

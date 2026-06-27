@@ -1,0 +1,261 @@
+/**
+ * PERFORMANCE: Critical CSS Optimizations
+ * - Fonts declared inline in index.html for fastest FCP
+ * - font-display: swap ensures text is visible during font load
+ * - Reduced animation durations for better perceived performance
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 224 71% 4%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 224 71% 4%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71% 4%;
+
+    --primary: 24 95% 53%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 30 20% 96%;
+    --secondary-foreground: 224 71% 4%;
+
+    --muted: 30 15% 95%;
+    --muted-foreground: 220 9% 46%;
+
+    --accent: 24 100% 45%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 30 15% 90%;
+    --input: 30 15% 90%;
+    --ring: 24 95% 53%;
+
+    --radius: 0.75rem;
+
+    /* Custom design tokens */
+    --glow-primary: 24 95% 53%;
+    --glow-accent: 24 100% 45%;
+    --gradient-start: 0 0% 100%;
+    --gradient-end: 30 20% 98%;
+    
+    /* Glass effect - light mode */
+    --glass-bg: 0 0% 100% / 0.8;
+    --glass-border: 24 95% 53% / 0.15;
+  }
+
+  .dark {
+    --background: 224 71% 4%;
+    --foreground: 0 0% 100%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', sans-serif;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-xl border border-orange-100 rounded-2xl shadow-sm;
+  }
+
+  .glow-text {
+    @apply text-primary;
+    text-shadow: 0 0 20px hsl(var(--primary) / 0.3),
+                 0 0 40px hsl(var(--primary) / 0.15);
+  }
+
+  .glow-box {
+    box-shadow: 0 10px 40px hsl(var(--primary) / 0.15),
+                0 4px 20px hsl(var(--primary) / 0.1);
+  }
+
+  .gradient-border {
+    position: relative;
+    background: linear-gradient(135deg, hsl(var(--card)), hsl(var(--secondary)));
+    border-radius: var(--radius);
+  }
+
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+    -webkit-mask: 
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+  }
+
+  .bg-gradient-radial {
+    background: radial-gradient(ellipse at center, hsl(var(--primary) / 0.08) 0%, transparent 70%);
+  }
+}
+
+@layer utilities {
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient-shift 8s ease infinite;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { 
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.4),
+                0 0 40px hsl(var(--primary) / 0.2);
+  }
+  50% { 
+    box-shadow: 0 0 30px hsl(var(--primary) / 0.6),
+                0 0 60px hsl(var(--primary) / 0.3);
+  }
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Print Styles for Quotations & Invoices */
+@media print {
+  body {
+    background: white !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  /* Hide non-printable elements */
+  header, 
+  aside, 
+  nav, 
+  .no-print,
+  button:not(.print-button),
+  [data-radix-dialog-overlay],
+  .print\\:hidden {
+    display: none !important;
+  }
+  
+  /* Show print-only elements */
+  .print\\:block {
+    display: block !important;
+  }
+  
+  /* Dialog content styling for print */
+  [data-radix-dialog-content] {
+    position: static !important;
+    transform: none !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: white !important;
+  }
+  
+  /* Quotation/Invoice preview print styles */
+  .quotation-preview,
+  .invoice-preview {
+    padding: 20mm !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+  
+  /* Ensure colors print correctly */
+  .text-orange-600,
+  .text-orange-500 {
+    color: #ea580c !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  .bg-orange-500,
+  .from-orange-500 {
+    background-color: #f97316 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  .border-orange-500 {
+    border-color: #f97316 !important;
+  }
+  
+  .bg-gray-100 {
+    background-color: #f3f4f6 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  /* Table styling for print */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  th, td {
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  th {
+    background-color: #f3f4f6 !important;
+    font-weight: 600;
+  }
+  
+  /* Page breaks */
+  .page-break {
+    page-break-before: always;
+  }
+  
+  .avoid-break {
+    page-break-inside: avoid;
+  }
+}
