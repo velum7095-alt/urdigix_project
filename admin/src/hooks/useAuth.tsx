@@ -26,10 +26,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isDevMode, setIsDevMode] = useState(false);
 
   useEffect(() => {
-    if (DEV_MODE) {
+    const isDevSession = localStorage.getItem('dev_admin_session') === 'true';
+    if (import.meta.env.DEV && (DEV_MODE || isDevSession)) {
       const devUser = {
         id: 'local-dev-admin',
-        email: 'dev@urdigix.local',
+        email: 'admin@urdigix.local',
       } as User;
 
       setUser(devUser);
@@ -95,6 +96,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signIn = async (email: string, password: string) => {
+    if (import.meta.env.DEV) {
+      const cleanEmail = email.trim().toLowerCase();
+      if ((cleanEmail === 'admin' || cleanEmail === 'admin@urdigix.local' || cleanEmail === 'admin@urdigix.com') && password === 'password') {
+        const devUser = {
+          id: 'local-dev-admin',
+          email: 'admin@urdigix.local',
+        } as User;
+        
+        setUser(devUser);
+        setSession(null);
+        setIsAdmin(true);
+        setIsDevMode(true);
+        setIsLoading(false);
+        localStorage.setItem('dev_admin_session', 'true');
+        return { error: null };
+      }
+    }
+
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     return { error: error as Error | null };
   };

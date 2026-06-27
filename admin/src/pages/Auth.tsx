@@ -23,7 +23,9 @@ import { z } from 'zod';
 const authSchema = z.object({
   email: z.string()
     .min(1, { message: "Email is required" })
-    .email({ message: "Invalid email format" })
+    .refine((val) => val === 'admin' || z.string().email().safeParse(val).success, {
+      message: "Invalid email format"
+    })
     .max(255, { message: "Email too long" }),
   password: z.string()
     .min(1, { message: "Password is required" })
@@ -213,10 +215,10 @@ const Auth = () => {
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <Input
                   id="email"
-                  type="email"
+                  type="text"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@urdigix.com"
+                  placeholder="admin or email"
                   className="pl-10 bg-gray-50 border-gray-200 focus:border-orange-400 focus:ring-orange-400"
                   required
                   disabled={isLocked}
