@@ -15,7 +15,9 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
-  Sparkles
+  Sparkles,
+  Users,
+  Briefcase
 } from 'lucide-react';
 import { AdminDashboard } from '@/components/admin/AdminDashboard';
 import { AdminCMS } from '@/components/admin/AdminCMS';
@@ -24,6 +26,8 @@ import { AdminAnalytics } from '@/components/admin/AdminAnalytics';
 import { QuotationsManager } from '@/components/admin/QuotationsManager';
 import { InvoicesManager } from '@/components/admin/InvoicesManager';
 import { BusinessSettings } from '@/components/admin/BusinessSettings';
+import { ClientsManager } from '@/components/admin/ClientsManager';
+import { ContractsManager } from '@/components/admin/ContractsManager';
 
 const Admin = () => {
   const { user, isAdmin, isLoading, isDevMode, signOut } = useAuth();
@@ -90,6 +94,8 @@ const Admin = () => {
 
   const tabs = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'clients', label: 'Clients', icon: Users },
+    { id: 'contracts', label: 'Contracts', icon: Briefcase },
     { id: 'quotations', label: 'Quotations', icon: FileCheck },
     { id: 'invoices', label: 'Invoices', icon: Receipt },
     { id: 'cms', label: 'CMS', icon: FileText },
@@ -208,6 +214,8 @@ const Admin = () => {
               className="relative z-10"
             >
               {activeTab === 'dashboard' && <AdminDashboard />}
+              {activeTab === 'clients' && <ClientsManager />}
+              {activeTab === 'contracts' && <ContractsManager />}
               {activeTab === 'quotations' && <QuotationsManager />}
               {activeTab === 'invoices' && <InvoicesManager />}
               {activeTab === 'cms' && <AdminCMS />}

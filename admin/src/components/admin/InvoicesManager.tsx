@@ -950,7 +950,7 @@ export const InvoicesManager = () => {
                         <Button variant="outline" onClick={() => setIsPreviewOpen(false)}>
                             Close
                         </Button>
-                        <Button onClick={() => window.print()}>
+                        <Button onClick={() => handleDownloadPDF(previewInvoice)}>
                             <Download className="w-4 h-4 mr-2" /> Download PDF
                         </Button>
                     </div>

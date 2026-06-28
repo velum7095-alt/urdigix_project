@@ -4,10 +4,11 @@
   "version": "1.0.0",
   "dependencies": {
     "@supabase/supabase-js": "^2.90.1",
+    "vite": "8.1.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@vercel/node": "^5.5.28",
+    "@vercel/node": "^4.0.0",
     "typescript": "^5.8.3"
   }
 }

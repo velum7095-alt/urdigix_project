@@ -23,10 +23,10 @@ import { z } from 'zod';
 const authSchema = z.object({
   email: z.string()
     .min(1, { message: "Email is required" })
+    .max(255, { message: "Email too long" })
     .refine((val) => val === 'admin' || z.string().email().safeParse(val).success, {
       message: "Invalid email format"
-    })
-    .max(255, { message: "Email too long" }),
+    }),
   password: z.string()
     .min(1, { message: "Password is required" })
     .max(100, { message: "Password too long" }),

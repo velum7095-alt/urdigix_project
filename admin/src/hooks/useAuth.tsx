@@ -99,16 +99,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const checkAdminRole = async (userId: string) => {
     try {
+      // Primary: call has_role RPC (works with either DB function signature)
       const { data, error } = await supabase.rpc('has_role', {
         _user_id: userId,
         _role: 'admin'
       });
 
-      if (error) {
-        console.error('Error checking admin role:', error);
+      if (!error) {
+        setIsAdmin(data ?? false);
+        setIsLoading(false);
+        return;
+      }
+
+      // Fallback: RPC call failed (e.g. function overload ambiguity on live DB)
+      // Try querying user_roles table directly
+      console.warn('has_role RPC error, falling back to user_roles table:', error.message);
+      const { data: roleRow, error: roleError } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', userId)
+        .eq('role', 'admin')
+        .maybeSingle();
+
+      if (roleError) {
+        console.error('Error checking user_roles table:', roleError);
         setIsAdmin(false);
       } else {
-        setIsAdmin(data ?? false);
+        setIsAdmin(!!roleRow);
       }
     } catch (err) {
       console.error('Error checking admin role:', err);

@@ -784,7 +784,7 @@ export type Database = {
       generate_quotation_number: { Args: never; Returns: string }
       has_role: {
         Args: {
-          _role: Database["public"]["Enums"]["app_role"]
+          _role: string
           _user_id: string
         }
         Returns: boolean
