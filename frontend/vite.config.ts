@@ -32,20 +32,29 @@ export default defineConfig(({ mode }) => ({
     // PERFORMANCE: Code splitting configuration
     rollupOptions: {
       output: {
-        // PERFORMANCE: Manual chunks for better caching
-        manualChunks: {
-          // Vendor chunks - cached separately
-          "vendor-react": ["react", "react-dom"],
-          "vendor-router": ["react-router-dom"],
-          "vendor-motion": ["framer-motion"],
-          "vendor-query": ["@tanstack/react-query"],
-          // UI components in separate chunk
-          "ui-components": [
-            "@radix-ui/react-dialog",
-            "@radix-ui/react-dropdown-menu",
-            "@radix-ui/react-toast",
-            "@radix-ui/react-tooltip",
-          ],
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            if (id.includes("react-dom") || id.includes("react/")) {
+              return "vendor-react";
+            }
+            if (id.includes("react-router-dom")) {
+              return "vendor-router";
+            }
+            if (id.includes("framer-motion")) {
+              return "vendor-motion";
+            }
+            if (id.includes("@tanstack/react-query")) {
+              return "vendor-query";
+            }
+            if (
+              id.includes("@radix-ui/react-dialog") ||
+              id.includes("@radix-ui/react-dropdown-menu") ||
+              id.includes("@radix-ui/react-toast") ||
+              id.includes("@radix-ui/react-tooltip")
+            ) {
+              return "ui-components";
+            }
+          }
         },
         // PERFORMANCE: Consistent chunk naming for better caching
         chunkFileNames: "assets/[name]-[hash].js",
