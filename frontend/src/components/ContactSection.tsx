@@ -42,37 +42,29 @@ const ContactSectionComponent = () => {
       return;
     }
 
+    // Also get the company field if present
+    const company = (formData.get('company') as string)?.trim() || '';
+
     try {
-      const { data, error } = await supabase.functions.invoke('contact-form', {
-        body: { name, email, message }
-      });
+      const { error } = await supabase
+        .from('contact_submissions')
+        .insert({
+          name,
+          email,
+          message,
+          phone: company, // store company in phone field for now
+        });
 
       if (error) {
         throw new Error(error.message || 'Failed to send message');
       }
 
-      if (data?.error) {
-        if (data.retryAfter) {
-          toast({
-            title: "Too Many Requests",
-            description: "Please wait before submitting again.",
-            variant: "destructive"
-          });
-        } else {
-          toast({
-            title: "Error",
-            description: data.details?.join(', ') || data.error,
-            variant: "destructive"
-          });
-        }
-      } else {
-        trackFormSubmission('contact_form');
-        toast({
-          title: "Message sent!",
-          description: "We'll get back to you within 24 hours."
-        });
-        (e.target as HTMLFormElement).reset();
-      }
+      trackFormSubmission('contact_form');
+      toast({
+        title: "Message sent! ✅",
+        description: "We'll get back to you within 24 hours."
+      });
+      (e.target as HTMLFormElement).reset();
     } catch (error) {
       console.error('Contact form error:', error);
       toast({
